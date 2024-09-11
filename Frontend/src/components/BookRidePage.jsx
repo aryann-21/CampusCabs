@@ -92,7 +92,7 @@ const BookRidePage = ({ studentName = "Aryan", onFilterRides }) => {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="bg-blue-500 text-white font-bold py-2 px-10 rounded-md mt-4 hover:bg-blue-600 transition duration-150"
+              className="bg-yellow-300 text-lg text-black font-bold py-2 px-10 rounded-md mt-4 hover:bg-yellow-400 transition duration-150"
             >
               See rides
             </button>
