@@ -4,10 +4,11 @@ import taxiImg from "../assets/taxi.jpg";
 
 const BookRidePage = ({ studentName = "Aryan", onFilterRides }) => {
   const [formData, setFormData] = useState({
+    pickupLocation: '',
     dropLocation: '',
-    numberOfPeople: '',
     date: '',
-    time: ''
+    time: '',
+    numberOfPeople: ''
   });
   const navigate = useNavigate();
 
@@ -24,6 +25,7 @@ const BookRidePage = ({ studentName = "Aryan", onFilterRides }) => {
 
   return (
     <div className="flex h-[100%] overflow-hidden bg-white">
+      {/* Left side - Booking form */}
       <div className="w-full md:w-1/2 p-4 md:p-6 flex flex-col justify-center items-center">
         <h1 className="text-gray-800 text-xl md:text-3xl font-semibold mb-2 text-center">
           Welcome, {studentName}!
@@ -34,7 +36,7 @@ const BookRidePage = ({ studentName = "Aryan", onFilterRides }) => {
         <p className="text-gray-600 mb-6 text-center">
           Request a ride, hop in, and go.
         </p>
-        <form onSubmit={handleSubmit} className="space-y-3 w-full max-w-sm"> 
+        <form onSubmit={handleSubmit} className="space-y-3 w-full max-w-sm">
           <div className="relative">
             <input
               type="text"
@@ -98,10 +100,12 @@ const BookRidePage = ({ studentName = "Aryan", onFilterRides }) => {
         </form>
       </div>
 
+      {/* Right side - Image */}
       <div
         className="hidden md:block w-1/2 bg-cover bg-center"
         style={{ backgroundImage: `url(${taxiImg})` }}
       >
+        {/* This is where the actual image would go */}
       </div>
     </div>
   );

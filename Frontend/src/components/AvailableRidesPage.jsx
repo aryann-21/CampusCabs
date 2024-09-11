@@ -1,9 +1,18 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const AvailableRidesPage = ({ allRides, filteredRides }) => {
   const location = useLocation();
-  const ridesToDisplay = location.pathname.includes('filtered-rides') ? filteredRides : allRides;
+  const navigate = useNavigate();
+  const isFilteredRides = location.pathname.includes('filtered-rides');
+  const ridesToDisplay = isFilteredRides ? filteredRides : allRides;
+
+  const handleRideClick = (ride) => {
+    if (isFilteredRides) {
+      const { filters } = location.state;
+      navigate('/dashboard/confirm-ride', { state: { ride: { ...ride, ...filters } } });
+    }
+  };
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg">
@@ -11,7 +20,11 @@ const AvailableRidesPage = ({ allRides, filteredRides }) => {
       {ridesToDisplay.length > 0 ? (
         <ul className="space-y-4">
           {ridesToDisplay.map((ride, index) => (
-            <li key={index} className="flex bg-gray-100 p-4 rounded-lg shadow">
+            <li
+              key={index}
+              className={`flex bg-gray-100 p-4 rounded-lg shadow ${isFilteredRides ? 'cursor-pointer' : ''}`}
+              onClick={() => handleRideClick(ride)}
+            >
               <div
                 className={`w-2 rounded-l-lg ${
                   ride.isAvailable ? 'bg-green-500' : 'bg-red-500'

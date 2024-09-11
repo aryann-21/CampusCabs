@@ -5,6 +5,7 @@ import RideHistoryPage from "./RideHistoryPage";
 import MessagesPage from "./MessagesPage";
 import ProfilePage from "./ProfilePage";
 import AvailableRidesPage from "./AvailableRidesPage";
+import ConfirmRidePage from "./ConfirmRidePage"; // Import the new page
 
 const DashboardPage = () => {
   const [activeTab, setActiveTab] = useState("book-ride");
@@ -195,6 +196,10 @@ const DashboardPage = () => {
           <Route
             path="filtered-rides"
             element={<AvailableRidesPage allRides={allRides} filteredRides={filteredRides} />}
+          />
+          <Route
+            path="confirm-ride"
+            element={<ConfirmRidePage />}
           />
         </Routes>
       </main>
