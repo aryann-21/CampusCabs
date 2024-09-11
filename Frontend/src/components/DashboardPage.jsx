@@ -4,7 +4,7 @@ import BookRidePage from "./BookRidePage";
 import RideHistoryPage from "./RideHistoryPage";
 import MessagesPage from "./MessagesPage";
 import ProfilePage from "./ProfilePage";
-import AvailableRidesPage from "./AvailableRidesPage"; // Import the new page
+import AvailableRidesPage from "./AvailableRidesPage";
 
 const DashboardPage = () => {
   const [activeTab, setActiveTab] = useState("book-ride");
@@ -14,21 +14,21 @@ const DashboardPage = () => {
       driverPhone: "123-456-7890",
       cabNumber: "PB 01 2345",
       availableSeats: 3,
-      isAvailable: true,
+      isAvailable: true
     },
     {
       driverName: "Driver B",
       driverPhone: "987-654-3210",
       cabNumber: "PB 02 3456",
       availableSeats: 6,
-      isAvailable: true,
+      isAvailable: true
     },
     {
       driverName: "Driver C",
       driverPhone: "987-123-4560",
       cabNumber: "PB 03 4567",
       availableSeats: 0,
-      isAvailable: false,
+      isAvailable: false
     },
     // Add more available rides here
   ]);
@@ -55,8 +55,7 @@ const DashboardPage = () => {
     const filtered = allRides.filter(
       (ride) =>
         ride.isAvailable === true &&
-        ride.availableSeats > 0 &&
-        ride.availableSeats >= filters.numberO
+        ride.availableSeats >= filters.numberOfPeople
     );
     setFilteredRides(filtered);
     navigate("/dashboard/filtered-rides", { state: { filteredRides: filtered } });
