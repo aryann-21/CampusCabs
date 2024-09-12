@@ -13,40 +13,54 @@ const ContactPage = () => {
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-        <h2 className="text-2xl font-bold mb-6 text-center">Contact Us</h2>
-        <form onSubmit={handleSubmit}>
+      <div className="bg-white rounded-xl shadow-lg max-w-md w-full">
+        <div className="bg-gray-800 text-yellow-300 py-6 px-8 rounded-t-xl">
+          <h2 className="text-3xl font-bold text-center">Contact Us</h2>
+        </div>
+        <form onSubmit={handleSubmit} className="p-8 space-y-6">
           <div className="mb-4">
-            <label htmlFor="name" className="block text-gray-700">Name</label>
-            <input 
-              type="text" 
-              id="name" 
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" 
-              value={name} 
-              onChange={(e) => setName(e.target.value)} 
+            <label htmlFor="name" className="block text-gray-700 text-sm font-medium mb-2">
+              Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="name"
+              placeholder="Enter your name"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 transition duration-150 ease-in-out"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-700">Email</label>
-            <input 
-              type="email" 
-              id="email" 
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
+            <label htmlFor="email" className="block text-gray-700 text-sm font-medium mb-2">
+              Email <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="email"
+              id="email"
+              placeholder="Enter your email"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 transition duration-150 ease-in-out"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="message" className="block text-gray-700">Message</label>
-            <textarea 
-              id="message" 
+            <label htmlFor="message" className="block text-gray-700 text-sm font-medium mb-2">
+              Message <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              id="message"
               rows="4"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500" 
-              value={message} 
-              onChange={(e) => setMessage(e.target.value)} 
+              placeholder="Enter your message"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-yellow-400 transition duration-150 ease-in-out"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
             ></textarea>
           </div>
-          <button type="submit" className="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600">
+          <button
+            type="submit"
+            className="w-full text-xl bg-gray-800 text-yellow-300 py-3 rounded-lg font-semibold hover:bg-yellow-400 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition duration-200 ease-in-out"
+          >
             Send Message
           </button>
         </form>

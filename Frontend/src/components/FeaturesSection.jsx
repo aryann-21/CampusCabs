@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import FeatureCard from './FeatureCard';
 
-const FeaturesSection = () => {
+const FeaturesSection = forwardRef((props, ref) => {
   const features = [
     { title: 'Easy Booking', description: 'Book your ride instantly with just a few clicks.' },
     { title: 'Ride Together', description: 'Coordinate rides with fellow students and save costs.' },
@@ -14,7 +14,7 @@ const FeaturesSection = () => {
   ];
 
   return (
-    <section className="py-16 px-16 bg-gray-100 text-center">
+    <section ref={ref} className="py-16 px-16 bg-gray-100 text-center">
       <h2 className="text-3xl font-bold mb-8">Why Choose CampusCabs?</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         {features.map((feature, index) => (
@@ -23,6 +23,6 @@ const FeaturesSection = () => {
       </div>
     </section>
   );
-};
+});
 
 export default FeaturesSection;

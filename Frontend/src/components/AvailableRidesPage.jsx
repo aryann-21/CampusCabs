@@ -22,7 +22,7 @@ const AvailableRidesPage = ({ allRides, filteredRides }) => {
           {ridesToDisplay.map((ride, index) => (
             <li
               key={index}
-              className={`flex bg-gray-100 p-4 rounded-lg shadow ${isFilteredRides ? 'cursor-pointer' : ''}`}
+              className={`flex bg-gray-100 p-4 rounded-lg shadow ${isFilteredRides ? 'cursor-pointer' : ''} ${isFilteredRides ? 'hover:bg-gray-200 hover:-translate-y-1 duration-150' : ''}`}
               onClick={() => handleRideClick(ride)}
             >
               <div

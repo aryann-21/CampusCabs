@@ -1,6 +1,8 @@
+// src/pages/BookRidePage.js
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import taxiImg from "../assets/taxi.jpg";
+import { locations } from '../data/locations'; // Import locations data
 
 const BookRidePage = ({ studentName = "Aryan", onFilterRides }) => {
   const [formData, setFormData] = useState({
@@ -10,17 +12,23 @@ const BookRidePage = ({ studentName = "Aryan", onFilterRides }) => {
     time: '',
     numberOfPeople: ''
   });
+  const [selectedFare, setSelectedFare] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+
+    if (name === 'dropLocation') {
+      const fare = locations.find(loc => loc.name === value)?.fare || null;
+      setSelectedFare(fare);
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onFilterRides(formData);
-    navigate('/dashboard/filtered-rides', { state: { filters: formData } });
+    navigate('/dashboard/filtered-rides', { state: { filters: { ...formData, fare: selectedFare } } });
   };
 
   return (
@@ -38,14 +46,20 @@ const BookRidePage = ({ studentName = "Aryan", onFilterRides }) => {
         </p>
         <form onSubmit={handleSubmit} className="space-y-3 w-full max-w-sm">
           <div className="relative">
-            <input
-              type="text"
+            <select
               name="dropLocation"
-              placeholder="Enter drop location"
               value={formData.dropLocation}
               onChange={handleChange}
+              required
               className="w-full bg-gray-100 border-2 border-gray-500 text-black py-2 px-3 rounded-md pl-12"
-            />
+            >
+              <option value="">Select drop location</option>
+              {locations.map((loc, index) => (
+                <option key={index} value={loc.name}>
+                  {loc.name}
+                </option>
+              ))}
+            </select>
             <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500">
               <span className="material-icons">flag</span>
             </span>
@@ -57,6 +71,7 @@ const BookRidePage = ({ studentName = "Aryan", onFilterRides }) => {
               placeholder="Number of people"
               value={formData.numberOfPeople}
               onChange={handleChange}
+              required
               className="w-full bg-gray-100 border-2 border-gray-500 text-black py-2 px-3 rounded-md pl-12"
             />
             <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500">
@@ -70,6 +85,7 @@ const BookRidePage = ({ studentName = "Aryan", onFilterRides }) => {
               placeholder="Pickup time"
               value={formData.time}
               onChange={handleChange}
+              required
               className="w-full bg-gray-100 border-2 border-gray-500 text-black py-2 px-3 rounded-md pl-12"
             />
             <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500">
@@ -83,6 +99,7 @@ const BookRidePage = ({ studentName = "Aryan", onFilterRides }) => {
               placeholder="Date"
               value={formData.date}
               onChange={handleChange}
+              required
               className="w-full bg-gray-100 border-2 border-gray-500 text-black py-2 px-3 rounded-md pl-12"
             />
             <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500">
