@@ -26,7 +26,7 @@ const AvailableRidesPage = ({ allRides, filteredRides }) => {
               onClick={() => handleRideClick(ride)}
             >
               <div
-                className={`w-2 rounded-l-lg ${
+                className={`w-1 rounded-l-lg ${
                   ride.isAvailable ? 'bg-green-500' : 'bg-red-500'
                 }`}
               ></div>

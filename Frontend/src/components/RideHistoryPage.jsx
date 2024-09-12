@@ -8,7 +8,7 @@ const RideHistoryPage = ({ rideHistory = [] }) => {
       {rideHistory.length > 0 ? (
         <ul className="space-y-4">
           {rideHistory.map((ride, index) => (
-            <li key={index} className="bg-gray-100 p-4 rounded-lg shadow hover:bg-gray-200 hover:-translate-y-1 duration-100">
+            <li key={index} className="bg-gray-100 p-4 rounded-lg shadow hover:bg-gray-200 hover:-translate-y-1 duration-150">
               <div className="flex justify-between items-center">
                 <div>
                   <p className="font-semibold">From: NITJ</p>

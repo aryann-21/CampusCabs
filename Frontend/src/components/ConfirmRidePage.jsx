@@ -16,7 +16,7 @@ const ConfirmRidePage = () => {
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg max-w-4xl mx-auto mt-10">
       <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Confirm Your Ride</h2>
-      <div className="flex flex-wrap justify-between mb-6">
+      <div className="flex flex-wrap justify-between mb-6 text-[17px]">
         {/* Left Column - Rider Details */}
         <div className="w-full md:w-1/2 p-4 space-y-4">
           <div className="px-4 py-2 bg-gray-100 rounded-md shadow-sm">
@@ -36,8 +36,8 @@ const ConfirmRidePage = () => {
             <p className="text-gray-800">{ride.availableSeats}</p>
           </div>
           <div className="px-4 py-2 bg-gray-100 rounded-md shadow-sm">
-            <p className="font-semibold text-gray-900">Fare:</p>
-            <p className="text-gray-800">${ride.fare}</p>
+            <p className="font-semibold text-gray-900">Total Fare:</p>
+            <p className="text-green-600">Rs {ride.fare * ride.numberOfPeople}/-</p>
           </div>
         </div>
 

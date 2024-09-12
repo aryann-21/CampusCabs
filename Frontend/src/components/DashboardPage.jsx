@@ -1,3 +1,4 @@
+// src/pages/DashboardPage.js
 import React, { useState } from "react";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import BookRidePage from "./BookRidePage";
@@ -6,51 +7,13 @@ import MessagesPage from "./MessagesPage";
 import ProfilePage from "./ProfilePage";
 import AvailableRidesPage from "./AvailableRidesPage";
 import ConfirmRidePage from "./ConfirmRidePage"; // Import the new page
+import { allRides } from '../data/allRides'; // Import allRides data
+import { rideHistory } from '../data/rideHistory'; // Import rideHistory data
 
 const DashboardPage = () => {
   const [activeTab, setActiveTab] = useState("book-ride");
-  const [allRides] = useState([
-    {
-      driverName: "Driver A",
-      driverPhone: "123-456-7890",
-      cabNumber: "PB 01 2345",
-      availableSeats: 3,
-      isAvailable: true
-    },
-    {
-      driverName: "Driver B",
-      driverPhone: "987-654-3210",
-      cabNumber: "PB 02 3456",
-      availableSeats: 6,
-      isAvailable: true
-    },
-    {
-      driverName: "Driver C",
-      driverPhone: "987-123-4560",
-      cabNumber: "PB 03 4567",
-      availableSeats: 0,
-      isAvailable: false
-    },
-    // Add more available rides here
-  ]);
   const [filteredRides, setFilteredRides] = useState([]);
   const navigate = useNavigate();
-
-  const rideHistory = [
-    {
-      pickupLocation: "NITJ",
-      dropLocation: "Location A",
-      date: "2023-10-01",
-      time: "10:00 AM",
-    },
-    {
-      pickupLocation: "NITJ",
-      dropLocation: "Location B",
-      date: "2023-10-02",
-      time: "11:00 AM",
-    },
-    // Add more ride history objects here
-  ];
 
   const handleFilterRides = (filters) => {
     const filtered = allRides.filter(
@@ -59,7 +22,9 @@ const DashboardPage = () => {
         ride.availableSeats >= filters.numberOfPeople
     );
     setFilteredRides(filtered);
-    navigate("/dashboard/filtered-rides", { state: { filteredRides: filtered } });
+    navigate("/dashboard/filtered-rides", {
+      state: { filteredRides: filtered },
+    });
   };
 
   return (
@@ -140,7 +105,7 @@ const DashboardPage = () => {
                 } hover:bg-blue-50 hover:text-blue-500`}
               >
                 <span className="material-icons mr-3">directions_car</span>
-                Available Rides
+                All Rides
               </Link>
             </li>
           </ul>
@@ -162,15 +127,15 @@ const DashboardPage = () => {
                 Settings
               </Link>
             </li>
-            <li className="mb-4">
+            <Link className="mb-4" to='/'>
               <button
                 onClick={() => console.log("Logout")}
-                className="w-full flex items-center text-left text-blue-500 hover:underline"
+                className="w-full flex items-center text-left text-blue-400 hover:text-blue-600 duration-150"
               >
                 <span className="material-icons mr-3">logout</span>
                 Logout
               </button>
-            </li>
+            </Link>
           </ul>
         </div>
       </aside>
@@ -195,12 +160,14 @@ const DashboardPage = () => {
           />
           <Route
             path="filtered-rides"
-            element={<AvailableRidesPage allRides={allRides} filteredRides={filteredRides} />}
+            element={
+              <AvailableRidesPage
+                allRides={allRides}
+                filteredRides={filteredRides}
+              />
+            }
           />
-          <Route
-            path="confirm-ride"
-            element={<ConfirmRidePage />}
-          />
+          <Route path="confirm-ride" element={<ConfirmRidePage />} />
         </Routes>
       </main>
     </div>

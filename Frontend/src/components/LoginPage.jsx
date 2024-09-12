@@ -46,7 +46,7 @@ const LoginPage = () => {
               onChange={(e) => setPassword(e.target.value)} 
             />
           </div>
-          <button type="submit" className="w-full text-xl bg-gray-800 text-yellow-300 py-3 rounded-lg font-semibold hover:bg-yellow-400 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition duration-200 ease-in-out">
+          <button type="submit" className="w-full text-xl bg-gray-800 text-yellow-300 py-3 rounded-lg font-semibold hover:bg-yellow-400 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition duration-300 ease-in-out">
             Login
           </button>
         </form>
