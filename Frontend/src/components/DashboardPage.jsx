@@ -1,4 +1,3 @@
-// src/pages/DashboardPage.js
 import React, { useState } from "react";
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import BookRidePage from "./BookRidePage";
@@ -28,9 +27,9 @@ const DashboardPage = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-lg p-6 flex flex-col justify-between">
+      <aside className="fixed top-0 left-0 w-64 h-full bg-white shadow-lg p-6 flex flex-col justify-between">
         <div>
           {/* Logo/Header */}
           <div className="flex items-center mb-6">
@@ -141,7 +140,7 @@ const DashboardPage = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-6">
+      <main className="flex-1 ml-64 p-6 overflow-y-auto">
         {/* Tab Content */}
         <Routes>
           <Route

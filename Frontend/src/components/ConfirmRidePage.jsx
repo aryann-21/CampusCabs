@@ -1,6 +1,7 @@
-// src/pages/ConfirmRidePage.js
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ConfirmRidePage = () => {
   const location = useLocation();
@@ -10,11 +11,12 @@ const ConfirmRidePage = () => {
   const handleConfirm = () => {
     // Handle ride confirmation logic here
     console.log('Ride confirmed:', ride);
-    navigate('/dashboard/ride-history'); // Redirect to ride history or another page
+    navigate('/dashboard/ride-history', { state: { rideBooked: true } }); // Pass state to indicate ride booking
   };
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg max-w-4xl mx-auto mt-10">
+      <ToastContainer />
       <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Confirm Your Ride</h2>
       <div className="flex flex-wrap justify-between mb-6 text-[17px]">
         {/* Left Column - Rider Details */}
@@ -45,7 +47,7 @@ const ConfirmRidePage = () => {
         <div className="w-full md:w-1/2 p-4 space-y-4">
           <div className="px-4 py-2 bg-gray-100 rounded-md shadow-sm">
             <p className="font-semibold text-gray-900">Availability:</p>
-            <p className={`text-gray8900 ${ride.isAvailable ? 'text-green-600' : 'text-red-600'}`}>
+            <p className={`text-gray-900 ${ride.isAvailable ? 'text-green-600' : 'text-red-600'}`}>
               {ride.isAvailable ? 'YES' : 'NO'}
             </p>
           </div>

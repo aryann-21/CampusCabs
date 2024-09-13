@@ -39,7 +39,7 @@ const BookRidePage = ({ studentName = "Aryan", onFilterRides }) => {
           Welcome, {studentName}!
         </h1>
         <h2 className="text-gray-800 text-2xl md:text-3xl font-bold mb-4 text-center">
-          Go anywhere with CampusCabs
+          Go anywhere with Campus<span className="text-yellow-500">Cabs</span>
         </h2>
         <p className="text-gray-600 mb-6 text-center">
           Request a ride, hop in, and go.
@@ -109,7 +109,7 @@ const BookRidePage = ({ studentName = "Aryan", onFilterRides }) => {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="bg-yellow-300 text-lg text-black font-bold py-2 px-10 rounded-md mt-4 hover:bg-yellow-400 transition duration-150"
+              className="bg-yellow-400 text-lg text-black font-bold py-2 px-10 rounded-md mt-4 hover:bg-yellow-500 transition duration-150"
             >
               See rides
             </button>
