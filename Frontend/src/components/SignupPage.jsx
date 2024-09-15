@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import axios from "axios"; // Import Axios for making HTTP requests
 import bgImg from "../assets/signup.png";
 
 const SignupPage = () => {
@@ -7,13 +8,31 @@ const SignupPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // For error handling
   const navigate = useNavigate();
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
-    // Handle sign-up logic
-    console.log("Signup:", name, email, password, phone);
-    navigate("/dashboard/book-ride"); // Redirect to dashboard after signup
+    try {
+      // Send a POST request to the backend signup route
+      const response = await axios.post(
+        "http://localhost:3000/signup", // Your backend signup endpoint
+        { name, email, password, phone }
+      );
+
+      // On successful signup, navigate to dashboard
+      if (response.status === 201) {
+        console.log("Signup successful:", response.data);
+        navigate("/dashboard/book-ride"); // Redirect to dashboard
+      }
+    } catch (error) {
+      console.error("Signup error:", error);
+      if (error.response && error.response.data.message) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage("An error occurred during signup");
+      }
+    }
   };
 
   return (
@@ -105,6 +124,10 @@ const SignupPage = () => {
                 onChange={(e) => setPhone(e.target.value)}
               />
             </div>
+            {/* Error message display */}
+            {errorMessage && (
+              <p className="text-red-500 text-center">{errorMessage}</p>
+            )}
             <button
               type="submit"
               className="w-full text-xl bg-gray-800 text-yellow-300 py-3 rounded-lg font-semibold hover:bg-yellow-400 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 transition duration-300 ease-in-out"

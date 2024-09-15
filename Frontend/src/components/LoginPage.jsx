@@ -1,17 +1,37 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import axios from "axios"; // Axios for making HTTP requests
 import bgImg from "../assets/login.png"; // Use the same background image
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); // For error handling
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Handle login logic
-    console.log("Login:", email, password);
-    navigate("/dashboard/book-ride"); // Redirect to dashboard after login
+    try {
+      // Send a POST request to the backend login route
+      const response = await axios.post(
+        "http://localhost:3000/login", // Your backend URL and endpoint
+        { email, password },
+        { withCredentials: true } // To include cookies with the request
+      );
+
+      // On successful login, navigate to dashboard or handle the response
+      if (response.status === 200) {
+        console.log("Login successful:", response.data);
+        navigate("/dashboard/book-ride");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      if (error.response && error.response.data.message) {
+        setErrorMessage(error.response.data.message);
+      } else {
+        setErrorMessage("An error occurred during login");
+      }
+    }
   };
 
   return (
@@ -71,6 +91,10 @@ const LoginPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+            {/* Error message display */}
+            {errorMessage && (
+              <p className="text-red-500 text-center">{errorMessage}</p>
+            )}
             <button
               type="submit"
               className="w-full text-xl bg-gray-800 text-yellow-300 py-3 rounded-lg font-semibold hover:bg-yellow-400 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 transition duration-300 ease-in-out"
