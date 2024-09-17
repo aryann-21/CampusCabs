@@ -114,9 +114,10 @@ app.post('/login', async (req, res) => {
 // Logout route
 app.get('/logout', (req, res) => {
   console.log('Logout request received'); // Debugging: log logout requests
-  res.cookie("token", "", { maxAge: 0 }); // Clear the cookie
-  res.json({ message: "Logged out successfully" }); // Return a JSON response
+  res.cookie("token", "", { maxAge: 0, httpOnly: true, secure: true, path: '/' }); // Clear the cookie
+  res.redirect('/'); // Redirect to homepage
 });
+
 
 // Protect route middleware to verify the token
 const authenticateToken = (req, res, next) => {
