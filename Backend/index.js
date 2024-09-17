@@ -20,11 +20,6 @@ app.use(cors({
   credentials: true, // To allow cookies
 }));
 
-// Connect to MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/campuscabs')
-  .then(() => console.log("MongoDB connected successfully"))
-  .catch(err => console.error("MongoDB connection error: ", err));
-
 // JWT secret - you should store this in an environment variable for security
 const JWT_SECRET = 'your_secret_key';
 
@@ -93,6 +88,7 @@ app.post('/login', async (req, res) => {
   try {
     let user = await userModel.findOne({ email: req.body.email });
     if (!user) return res.status(400).json({ message: "User does not exist!" });
+    else console.log('User found:', user.name); // Debugging: log found user
 
     // Compare passwords
     bcrypt.compare(req.body.password, user.password, (err, result) => {
