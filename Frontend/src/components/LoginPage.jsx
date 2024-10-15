@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios"; // Axios for making HTTP requests
 import bgImg from "../assets/login.png"; // Use the same background image
+import { useUser } from "../context/UserContext.jsx"; // Import the UserContext
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -9,22 +10,30 @@ const LoginPage = () => {
   const [errorMessage, setErrorMessage] = useState(""); // For error handling
   const navigate = useNavigate();
 
+  // Access the setUser function from the context
+  const { setUser } = useUser();
+
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
       // Send a POST request to the backend login route
       const response = await axios.post(
-        "http://localhost:3000/login", 
+        "http://localhost:3000/login",
         { email, password },
         { withCredentials: true } // Include cookies
-      );      
+      );
 
       // On successful login, navigate to dashboard or handle the response
       if (response.status === 200) {
         console.log("Login successful:", response.data);
         const userName = response.data.name; // Assuming the backend returns the user's name in the response
-        navigate("/dashboard/book-ride", { state: { name: userName } });
-      }      
+
+        // Set the user name in context
+        setUser({ name: userName }); // Store user name in context
+
+        // Navigate to the book ride page
+        navigate("/dashboard/book-ride");
+      }
     } catch (error) {
       console.error("Login error:", error);
       if (error.response && error.response.data.message) {
@@ -76,10 +85,12 @@ const LoginPage = () => {
                 onChange={(e) => setEmail(e.target.value)}
               />
               {errorMessage && (
-              <p className="text-rose-600 font-semibold text-sm -mb-3 mt-1 ml-1">{errorMessage}</p>
-            )}
+                <p className="text-rose-600 font-semibold text-sm -mb-3 mt-1 ml-1">
+                  {errorMessage}
+                </p>
+              )}
             </div>
-            
+
             <div className="mb-4">
               <label
                 htmlFor="password"

@@ -6,8 +6,8 @@ import MessagesPage from "./MessagesPage";
 import ProfilePage from "./ProfilePage";
 import AvailableRidesPage from "./AvailableRidesPage";
 import ConfirmRidePage from "./ConfirmRidePage"; // Import the new page
-import { allRides } from '../data/allRides'; // Import allRides data
-import { rideHistory } from '../data/rideHistory'; // Import rideHistory data
+import { allRides } from "../data/allRides"; // Import allRides data
+import { rideHistory } from "../data/rideHistory"; // Import rideHistory data
 
 const DashboardPage = () => {
   const [activeTab, setActiveTab] = useState("book-ride");
@@ -126,9 +126,12 @@ const DashboardPage = () => {
                 Settings
               </Link>
             </li>
-            <Link className="mb-4" to='/'>
+            <Link className="mb-4" to="/">
               <button
-                onClick={() => console.log("Logout")}
+                onClick={() => {
+                  setUser(null);
+                  console.log("Logout");
+                }}
                 className="w-full flex items-center text-left text-blue-400 hover:text-blue-600 duration-150"
               >
                 <span className="material-icons mr-3">logout</span>

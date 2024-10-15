@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import taxiImg from "../assets/taxi.jpg";
 import { locations } from '../data/locations'; // Import locations data
+import { useUser } from '../context/UserContext'; // Import the UserContext
 
 const BookRidePage = ({ onFilterRides }) => {
   const [formData, setFormData] = useState({
@@ -14,8 +15,7 @@ const BookRidePage = ({ onFilterRides }) => {
   const [selectedFare, setSelectedFare] = useState(null);
   const navigate = useNavigate();
 
-  const location = useLocation();
-  const studentName = location.state?.name;
+  const { user } = useUser(); // Get user from context
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,7 +30,7 @@ const BookRidePage = ({ onFilterRides }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     onFilterRides(formData);
-    navigate('/dashboard/filtered-rides', { state: { filters: { ...formData, fare: selectedFare }, name: studentName } });
+    navigate('/dashboard/filtered-rides', { state: { filters: { ...formData, fare: selectedFare }, name: user.name } });
   };
 
   return (
@@ -38,7 +38,7 @@ const BookRidePage = ({ onFilterRides }) => {
       {/* Left side - Booking form */}
       <div className="w-full md:w-1/2 p-4 md:p-6 flex flex-col justify-center items-center">
         <h1 className="text-gray-800 text-xl md:text-3xl font-semibold mb-2 text-center">
-          Welcome, {studentName}!
+          Welcome, {user.name}!
         </h1>
         <h2 className="text-gray-800 text-2xl md:text-3xl font-bold mb-4 text-center">
           Go anywhere with Campus<span className="text-yellow-500">Cabs</span>

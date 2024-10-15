@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios"; // Import Axios for making HTTP requests
 import bgImg from "../assets/signup.png";
+import { useUser } from "../context/UserContext.jsx"; // Import the UserContext
 
 const SignupPage = () => {
   const [name, setName] = useState("");
@@ -11,6 +12,9 @@ const SignupPage = () => {
   const [errorMessage, setErrorMessage] = useState(""); // For error handling
   const navigate = useNavigate();
 
+  // Access the setUser function from the context
+  const { setUser } = useUser();
+
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
@@ -19,12 +23,17 @@ const SignupPage = () => {
         "http://localhost:3000/signup", // Your backend signup endpoint
         { name, email, password, phone }
       );
-  
+
       // On successful signup, navigate to dashboard
       if (response.status === 201) {
         console.log("Signup successful:", response.data);
         const userName = response.data.name; // Get the user's name from the response
-        navigate("/dashboard/book-ride", { state: { name: userName } }); // Pass the user's name to BookRidePage
+
+        // Set the user name in context
+        setUser({ name: userName }); // Store user name in context
+
+        // Navigate to the book ride page
+        navigate("/dashboard/book-ride"); // No need to pass name in state
       }
     } catch (error) {
       console.error("Signup error:", error);
@@ -34,7 +43,7 @@ const SignupPage = () => {
         setErrorMessage("An error occurred during signup");
       }
     }
-  };  
+  };
 
   return (
     <div className="relative h-screen">
@@ -93,8 +102,10 @@ const SignupPage = () => {
                 onChange={(e) => setEmail(e.target.value)}
               />
               {errorMessage && (
-              <p className="text-rose-600 font-semibold text-sm -mb-3 mt-1 ml-1">{errorMessage}</p>
-            )}
+                <p className="text-rose-600 font-semibold text-sm -mb-3 mt-1 ml-1">
+                  {errorMessage}
+                </p>
+              )}
             </div>
             <div className="mb-4">
               <label
