@@ -19,11 +19,12 @@ const SignupPage = () => {
         "http://localhost:3000/signup", // Your backend signup endpoint
         { name, email, password, phone }
       );
-
+  
       // On successful signup, navigate to dashboard
       if (response.status === 201) {
         console.log("Signup successful:", response.data);
-        navigate("/dashboard/book-ride"); // Redirect to dashboard
+        const userName = response.data.name; // Get the user's name from the response
+        navigate("/dashboard/book-ride", { state: { name: userName } }); // Pass the user's name to BookRidePage
       }
     } catch (error) {
       console.error("Signup error:", error);
@@ -33,7 +34,7 @@ const SignupPage = () => {
         setErrorMessage("An error occurred during signup");
       }
     }
-  };
+  };  
 
   return (
     <div className="relative h-screen">
@@ -91,6 +92,9 @@ const SignupPage = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
+              {errorMessage && (
+              <p className="text-rose-600 font-semibold text-sm -mb-3 mt-1 ml-1">{errorMessage}</p>
+            )}
             </div>
             <div className="mb-4">
               <label
@@ -125,9 +129,9 @@ const SignupPage = () => {
               />
             </div>
             {/* Error message display */}
-            {errorMessage && (
-              <p className="text-red-500 text-center">{errorMessage}</p>
-            )}
+            {/* {errorMessage && (
+              <p className="text-rose-600 font-semibold text-sm -mb-3 mt-1 ml-1">{errorMessage}</p>
+            )} */}
             <button
               type="submit"
               className="w-full text-xl bg-gray-800 text-yellow-300 py-3 rounded-lg font-semibold hover:bg-yellow-400 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 transition duration-300 ease-in-out"

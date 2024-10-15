@@ -1,10 +1,9 @@
-// src/pages/BookRidePage.js
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import taxiImg from "../assets/taxi.jpg";
 import { locations } from '../data/locations'; // Import locations data
 
-const BookRidePage = ({ studentName = "Aryan", onFilterRides }) => {
+const BookRidePage = ({ onFilterRides }) => {
   const [formData, setFormData] = useState({
     pickupLocation: '',
     dropLocation: '',
@@ -14,6 +13,9 @@ const BookRidePage = ({ studentName = "Aryan", onFilterRides }) => {
   });
   const [selectedFare, setSelectedFare] = useState(null);
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const studentName = location.state?.name;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,7 +30,7 @@ const BookRidePage = ({ studentName = "Aryan", onFilterRides }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     onFilterRides(formData);
-    navigate('/dashboard/filtered-rides', { state: { filters: { ...formData, fare: selectedFare } } });
+    navigate('/dashboard/filtered-rides', { state: { filters: { ...formData, fare: selectedFare }, name: studentName } });
   };
 
   return (

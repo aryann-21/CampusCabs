@@ -14,16 +14,17 @@ const LoginPage = () => {
     try {
       // Send a POST request to the backend login route
       const response = await axios.post(
-        "http://localhost:3000/login", // Your backend URL and endpoint
+        "http://localhost:3000/login", 
         { email, password },
-        { withCredentials: true } // To include cookies with the request
-      );
+        { withCredentials: true } // Include cookies
+      );      
 
       // On successful login, navigate to dashboard or handle the response
       if (response.status === 200) {
         console.log("Login successful:", response.data);
-        navigate("/dashboard/book-ride");
-      }
+        const userName = response.data.name; // Assuming the backend returns the user's name in the response
+        navigate("/dashboard/book-ride", { state: { name: userName } });
+      }      
     } catch (error) {
       console.error("Login error:", error);
       if (error.response && error.response.data.message) {
@@ -74,7 +75,11 @@ const LoginPage = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
+              {errorMessage && (
+              <p className="text-rose-600 font-semibold text-sm -mb-3 mt-1 ml-1">{errorMessage}</p>
+            )}
             </div>
+            
             <div className="mb-4">
               <label
                 htmlFor="password"
@@ -92,9 +97,9 @@ const LoginPage = () => {
               />
             </div>
             {/* Error message display */}
-            {errorMessage && (
-              <p className="text-red-500 text-center">{errorMessage}</p>
-            )}
+            {/* {errorMessage && (
+              <p className="text-red-600 font-semibold text-center text-2xl bg-black">{errorMessage}</p>
+            )} */}
             <button
               type="submit"
               className="w-full text-xl bg-gray-800 text-yellow-300 py-3 rounded-lg font-semibold hover:bg-yellow-400 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 transition duration-300 ease-in-out"
