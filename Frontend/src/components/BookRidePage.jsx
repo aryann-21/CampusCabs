@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import taxiImg from "../assets/taxi.jpg";
 import { locations } from '../data/locations'; // Import locations data
-import { useUser } from '../context/UserContext'; // Import the UserContext
+import { useUser  } from '../context/UserContext'; // Import the UserContext
 
 const BookRidePage = ({ onFilterRides }) => {
   const [formData, setFormData] = useState({
@@ -15,7 +15,20 @@ const BookRidePage = ({ onFilterRides }) => {
   const [selectedFare, setSelectedFare] = useState(null);
   const navigate = useNavigate();
 
-  const { user } = useUser(); // Get user from context
+  const { user, isLoading, setUser } = useUser (); // Get user from context
+
+  useEffect(() => {
+    const storedUser  = localStorage.getItem('user');
+    if (storedUser ) {
+      setUser(JSON.parse(storedUser ));
+    }
+  }, [setUser ]);
+
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    }
+  }, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,15 +43,19 @@ const BookRidePage = ({ onFilterRides }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     onFilterRides(formData);
-    navigate('/dashboard/filtered-rides', { state: { filters: { ...formData, fare: selectedFare }, name: user.name } });
+    navigate('/dashboard/filtered-rides', { state: { filters: { ...formData, fare: selectedFare }, name: user ? user.name : '' } });
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex h-[100%] overflow-hidden bg-white">
       {/* Left side - Booking form */}
       <div className="w-full md:w-1/2 p-4 md:p-6 flex flex-col justify-center items-center">
         <h1 className="text-gray-800 text-xl md:text-3xl font-semibold mb-2 text-center">
-          Welcome, {user.name}!
+          {user ? `Welcome, ${user.name}!` : 'Welcome!'}
         </h1>
         <h2 className="text-gray-800 text-2xl md:text-3xl font-bold mb-4 text-center">
           Go anywhere with Campus<span className="text-yellow-500">Cabs</span>
@@ -94,7 +111,7 @@ const BookRidePage = ({ onFilterRides }) => {
               <span className="material-icons">access_time</span>
             </span>
           </div>
-          <div className="relative">
+          <div className=" relative">
             <input
               type="date"
               name="date"
