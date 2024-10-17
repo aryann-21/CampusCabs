@@ -8,11 +8,16 @@ import AvailableRidesPage from "./AvailableRidesPage";
 import ConfirmRidePage from "./ConfirmRidePage"; // Import the new page
 import { allRides } from "../data/allRides"; // Import allRides data
 import { rideHistory } from "../data/rideHistory"; // Import rideHistory data
+import { useUser } from "../context/UserContext"; // Import your UserContext
 
 const DashboardPage = () => {
   const [activeTab, setActiveTab] = useState("book-ride");
   const [filteredRides, setFilteredRides] = useState([]);
   const navigate = useNavigate();
+  
+  // Get user details from context
+  const { user } = useUser(); 
+  const userEmail = user?.email; // Access the user's email
 
   const handleFilterRides = (filters) => {
     const filtered = allRides.filter(
@@ -22,7 +27,10 @@ const DashboardPage = () => {
     );
     setFilteredRides(filtered);
     navigate("/dashboard/filtered-rides", {
-      state: { filteredRides: filtered },
+      state: { 
+        filteredRides: filtered,
+        userEmail: userEmail // Pass user's email here
+      },
     });
   };
 
@@ -148,11 +156,11 @@ const DashboardPage = () => {
         <Routes>
           <Route
             path="book-ride"
-            element={<BookRidePage onFilterRides={handleFilterRides} />}
+            element={<BookRidePage onFilterRides={handleFilterRides} userEmail={userEmail} />}
           />
           <Route
             path="ride-history"
-            element={<RideHistoryPage rideHistory={rideHistory} />}
+            element={<RideHistoryPage email={userEmail} rideHistory={user?.rideHistory} />}
           />
           <Route path="messages" element={<MessagesPage />} />
           <Route path="profile" element={<ProfilePage />} />
@@ -169,7 +177,7 @@ const DashboardPage = () => {
               />
             }
           />
-          <Route path="confirm-ride" element={<ConfirmRidePage />} />
+          <Route path="confirm-ride" element={<ConfirmRidePage userEmail={userEmail} />} />
         </Routes>
       </main>
     </div>

@@ -1,17 +1,45 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
+import axios from 'axios'; // Make sure Axios is imported for the POST request
 import 'react-toastify/dist/ReactToastify.css';
 
 const ConfirmRidePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { ride } = location.state;
+  
+  // Destructure ride and email from location.state with fallback
+  const { ride = {}, email = '' } = location.state || {};
 
-  const handleConfirm = () => {
-    // Handle ride confirmation logic here
-    console.log('Ride confirmed:', ride);
-    navigate('/dashboard/ride-history', { state: { rideBooked: true } }); // Pass state to indicate ride booking
+  const handleConfirm = async () => {
+    if (!email || !ride) {
+      toast.error('Missing ride details or email.');
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:3000/save-ride-history', {
+        email: email, // Use the email directly
+        dropLocation: ride.dropLocation,
+        date: ride.date,
+        time: ride.time,
+        payment: ride.fare * ride.numberOfPeople,
+      });
+
+      if (response.status === 200) {
+        console.log('Ride history saved:', response.data);
+        toast.success('Ride confirmed and history updated!');
+        navigate('/dashboard/ride-history', {
+          state: {
+            rideHistory: response.data.rideHistory,
+            rideBooked: true,
+          },
+        });
+      }
+    } catch (error) {
+      console.error('Error saving ride history:', error);
+      toast.error('Error confirming ride');
+    }
   };
 
   return (

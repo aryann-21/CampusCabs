@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import taxiImg from "../assets/taxi.jpg";
 import { locations } from '../data/locations'; // Import locations data
-import { useUser  } from '../context/UserContext'; // Import the UserContext
+import { useUser } from '../context/UserContext'; // Import the UserContext
 
 const BookRidePage = ({ onFilterRides }) => {
   const [formData, setFormData] = useState({
@@ -15,14 +15,14 @@ const BookRidePage = ({ onFilterRides }) => {
   const [selectedFare, setSelectedFare] = useState(null);
   const navigate = useNavigate();
 
-  const { user, isLoading, setUser } = useUser (); // Get user from context
+  const { user, isLoading, setUser } = useUser(); // Get user from context
 
   useEffect(() => {
-    const storedUser  = localStorage.getItem('user');
-    if (storedUser ) {
-      setUser(JSON.parse(storedUser ));
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
     }
-  }, [setUser ]);
+  }, [setUser]);
 
   useEffect(() => {
     if (user) {
@@ -40,10 +40,18 @@ const BookRidePage = ({ onFilterRides }) => {
     }
   };
 
+  console.log(user.name, user.email);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     onFilterRides(formData);
-    navigate('/dashboard/filtered-rides', { state: { filters: { ...formData, fare: selectedFare }, name: user ? user.name : '' } });
+    navigate('/dashboard/filtered-rides', { 
+      state: { 
+        filters: { ...formData, fare: selectedFare }, 
+        name: user ? user.name : '', 
+        email: user ? user.email : '' // Pass email here
+      } 
+    });
   };
 
   if (isLoading) {
@@ -111,7 +119,7 @@ const BookRidePage = ({ onFilterRides }) => {
               <span className="material-icons">access_time</span>
             </span>
           </div>
-          <div className=" relative">
+          <div className="relative">
             <input
               type="date"
               name="date"

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useUser } from '../context/UserContext'; // Import UserContext
 
 const AvailableRidesPage = ({ allRides, filteredRides }) => {
   const location = useLocation();
@@ -7,10 +8,18 @@ const AvailableRidesPage = ({ allRides, filteredRides }) => {
   const isFilteredRides = location.pathname.includes('filtered-rides');
   const ridesToDisplay = isFilteredRides ? filteredRides : allRides;
 
+  const { user } = useUser(); // Get the user from context
+
   const handleRideClick = (ride) => {
     if (isFilteredRides) {
       const { filters } = location.state;
-      navigate('/dashboard/confirm-ride', { state: { ride: { ...ride, ...filters } } });
+      navigate('/dashboard/confirm-ride', {
+        state: {
+          ride: { ...ride, ...filters },
+          name: user?.name || '', // Pass user's name
+          email: user?.email || '', // Pass user's email
+        }
+      });
     }
   };
 

@@ -1,22 +1,19 @@
 const express = require('express');
-const cors = require('cors'); // Add this if you haven't
-
-const app = express();
-
-// CORS setup to allow requests from http://localhost:5173 with credentials
-app.use(cors({
-  origin: 'http://localhost:5173', // Your frontend URL
-  credentials: true, // Allow cookies and credentials
-  methods: 'GET,POST', // Allow the necessary methods
-  allowedHeaders: 'Content-Type,Authorization', // Ensure the required headers are allowed
-}));
-
-const userModel = require('./models/userModel.js');
-// const postModel = require('./models/post');
-
+const cors = require('cors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
+const userModel = require('./models/userModel.js');
+
+const app = express();
+
+// CORS setup to allow requests from frontend
+app.use(cors({
+  origin: 'http://localhost:5173', // Your frontend URL
+  credentials: true,
+  methods: 'GET,POST',
+  allowedHeaders: 'Content-Type,Authorization',
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -42,43 +39,54 @@ app.post('/signup', async (req, res) => {
 
     const token = jwt.sign({ email: user.email, userid: user._id }, 'secret');
     res.cookie('token', token);
-    // Return the user's name along with the success message
-    res.status(201).json({ message: 'User registered successfully', name: user.name });
+    res.status(201).json({ message: 'User registered successfully', name: user.name, email:user.email });
   } catch (error) {
     res.status(500).json({ message: 'Error registering user' });
   }
 });
-
 
 // User login
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Find the user by email
     const user = await userModel.findOne({ email });
     if (!user) return res.status(400).json({ message: 'User not found' });
 
-    // Compare the provided password with the stored hashed password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
 
-    // Generate a token (JWT)
     const token = jwt.sign({ email: user.email, userid: user._id }, 'secret');
-    
-    // Set the token in cookies
     res.cookie('token', token);
 
-    // Return the login success message along with the user's name
     res.status(200).json({
       message: 'Login successful',
-      name: user.name,  // Include the user's name
+      name: user.name,
+      email: user.email,
     });
   } catch (error) {
     res.status(500).json({ message: 'Error logging in' });
   }
 });
 
+// Save ride to user's history without authentication
+app.post('/save-ride-history', async (req, res) => {
+  const { email, dropLocation, date, time, payment } = req.body;  // Assuming email is passed to identify the user
+
+  try {
+    // Find the user by their email
+    const user = await userModel.findOne({ email });
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    // Add the ride to the user's ride history
+    user.rideHistory.push({ dropLocation, date, time, payment });
+    await user.save();
+
+    res.status(200).json({ message: 'Ride history updated', rideHistory: user.rideHistory });
+  } catch (error) {
+    res.status(500).json({ message: 'Error saving ride history' });
+  }
+});
 
 // User logout
 app.get('/logout', (req, res) => {
@@ -86,6 +94,7 @@ app.get('/logout', (req, res) => {
   res.status(200).json({ message: 'Logged out successfully' });
 });
 
+// Start server
 app.listen(3000, () => {
   console.log('Server running on http://localhost:3000');
 });

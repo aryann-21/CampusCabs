@@ -28,11 +28,11 @@ const LoginPage = () => {
         console.log("Login successful:", response.data);
         const userName = response.data.name; // Assuming the backend returns the user's name in the response
 
-        // Set the user name in context
-        setUser({ name: userName }); // Store user name in context
+        // Set the user name and email in context
+        setUser({ name: userName, email: response.data.email }); // Store user name and email in context
 
         // Navigate to the book ride page
-        navigate("/dashboard/book-ride");
+        navigate("/dashboard/book-ride", { state: { name: userName, email: response.data.email } });
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -107,10 +107,7 @@ const LoginPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            {/* Error message display */}
-            {/* {errorMessage && (
-              <p className="text-red-600 font-semibold text-center text-2xl bg-black">{errorMessage}</p>
-            )} */}
+
             <button
               type="submit"
               className="w-full text-xl bg-gray-800 text-yellow-300 py-3 rounded-lg font-semibold hover:bg-yellow-400 hover:text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-800 transition duration-300 ease-in-out"
