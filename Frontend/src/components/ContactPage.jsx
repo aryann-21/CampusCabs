@@ -1,16 +1,26 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import bgImg from "../assets/contactus.png"; // Use the same background image
+import axios from "axios";
 
 const ContactPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic
-    console.log("Contact Form Submitted:", { name, email, message });
+    try {
+      const response = await axios.post("http://localhost:3000/send-whatsapp", {
+        name,
+        email,
+        message,
+      });
+      alert("Message sent via WhatsApp!");
+    } catch (error) {
+      alert("Error sending message.");
+      console.error("Error:", error);
+    }
   };
 
   return (

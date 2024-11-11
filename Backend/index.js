@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const userModel = require('./models/userModel.js');
 
+const twilio = require('twilio');
+
 const app = express();
 
 // CORS setup to allow requests from frontend
@@ -20,6 +22,30 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// Twilio setup
+const accountSid = 'ACd5c713f0f7443b568de29ebab5e81207';  // Replace with your Twilio Account SID
+const authToken = '0186d3ebd796757f441402c0f872413b';   // Replace with your Twilio Auth Token
+const client = twilio(accountSid, authToken);
+
+app.post('/send-whatsapp', (req, res) => {
+  const { name, email, message } = req.body;
+
+  client.messages
+    .create({
+      body: `New Contact Form Submission:\nName: ${name}\nEmail: ${email}\nMessage: ${message}`,
+      from: 'whatsapp:+14155238886',  // Your Twilio WhatsApp-enabled number
+      to: 'whatsapp:+918690892181',     // Your personal WhatsApp number (replace with your number)
+    })
+    .then((message) => {
+      console.log(message.sid);
+      res.status(200).send('Message sent successfully!');
+    })
+    .catch((error) => {
+      console.error('Error sending message:', error);
+      res.status(500).send('Error sending message');
+    });
+});
 
 // Register a new user
 app.post('/signup', async (req, res) => {
