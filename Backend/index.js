@@ -24,8 +24,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Twilio setup
-const accountSid = 'ACd5c713f0f7443b568de29ebab5e81207';  // Replace with your Twilio Account SID
-const authToken = '0186d3ebd796757f441402c0f872413b';   // Replace with your Twilio Auth Token
+const accountSid = process.env.SID;  // Replace with your Twilio Account SID
+const authToken = process.env.AUTH_TOKEN;   // Replace with your Twilio Auth Token
 const client = twilio(accountSid, authToken);
 
 app.post('/send-whatsapp', (req, res) => {
