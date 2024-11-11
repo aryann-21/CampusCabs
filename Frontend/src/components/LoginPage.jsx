@@ -20,7 +20,7 @@ const LoginPage = () => {
       const response = await axios.post(
         "http://localhost:3000/login",
         { email, password },
-        { withCredentials: true } // Include cookies
+        { withCredentials: false } // hamesha false rakho because of CORS policy error
       );
 
       // On successful login, navigate to dashboard or handle the response

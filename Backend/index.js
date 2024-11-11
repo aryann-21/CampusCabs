@@ -11,9 +11,11 @@ const app = express();
 app.use(cors({
   origin: 'http://localhost:5173', // Your frontend URL
   credentials: true,
-  methods: 'GET,POST',
-  allowedHeaders: 'Content-Type,Authorization',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
+// app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -39,7 +41,7 @@ app.post('/signup', async (req, res) => {
 
     const token = jwt.sign({ email: user.email, userid: user._id }, 'secret');
     res.cookie('token', token);
-    res.status(201).json({ message: 'User registered successfully', name: user.name, email:user.email });
+    res.status(201).json({ message: 'User registered successfully', name: user.name, email: user.email });
   } catch (error) {
     res.status(500).json({ message: 'Error registering user' });
   }
