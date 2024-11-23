@@ -2,10 +2,35 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useUser } from "../context/UserContext";
+import axios from "axios"; // Import axios for making API calls
 
 const RideHistoryPage = () => {
   const location = useLocation();
   const [rideHistory, setRideHistory] = useState([]);
+  const { user } = useUser(); // Access user from context
+
+  useEffect(() => {
+    // Fetch ride history from backend when the component loads and user is logged in
+    if (user) {
+      const fetchRideHistory = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:3000/ride-history/${user.email}` // Adjust API endpoint as needed
+          );
+          const sortedHistory = response.data.sort(
+            (a, b) => new Date(b.date) - new Date(a.date)
+          ); // Sort the rides in descending order by date
+          setRideHistory(sortedHistory); // Assuming the response returns an array of rides
+        } catch (error) {
+          console.error("Error fetching ride history:", error);
+          toast.error("Failed to fetch ride history.");
+        }
+      };
+
+      fetchRideHistory();
+    }
+  }, [user]); // Re-run when user changes
 
   useEffect(() => {
     // If there is a new ride passed from the ConfirmRidePage
@@ -23,7 +48,10 @@ const RideHistoryPage = () => {
 
       // Update the ride history with the new ride
       if (location.state.rideHistory) {
-        setRideHistory(location.state.rideHistory);
+        const updatedHistory = location.state.rideHistory.sort(
+          (a, b) => new Date(b.date) - new Date(a.date)
+        );
+        setRideHistory(updatedHistory);
       }
     }
   }, [location.state]);

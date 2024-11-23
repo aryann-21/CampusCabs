@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import bgImg from "../assets/contactus.png"; // Use the same background image
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ContactPage = () => {
   const [name, setName] = useState("");
@@ -16,8 +18,13 @@ const ContactPage = () => {
         email,
         message,
       });
-      alert("Message sent via WhatsApp!");
-      // console.log(response);
+      toast.success('Sent message via WhatsApp!');
+      
+      // Redirect to home page after 1 second
+    setTimeout(() => {
+      window.location.href = '/'; 
+    }, 1000);
+
     } catch (error) {
       alert("Error sending message.");
       console.error("Error:", error);
@@ -45,7 +52,7 @@ const ContactPage = () => {
           arrow_back
         </Link>
       </span>
-
+      <ToastContainer />
       <div className="absolute inset-0 flex items-center justify-center h-full bg-black bg-opacity-50">
         <div className="bg-gray-300 rounded-xl shadow-lg max-w-md w-full bg-opacity-50 backdrop-blur-sm">
           <div className="bg-gray-800 text-yellow-300 py-6 px-8 rounded-t-xl">
