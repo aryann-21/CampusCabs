@@ -49,7 +49,7 @@ const Footer = () => {
               href="https://facebook.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white hover:text-yellow-400 transition"
+              className="text-white hover:text-blue-600 transition"
             >
               <FaFacebook size={24} />
             </a>
@@ -57,7 +57,7 @@ const Footer = () => {
               href="https://twitter.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white hover:text-yellow-400 transition"
+              className="text-white hover:text-blue-300 transition"
             >
               <FaTwitter size={24} />
             </a>
@@ -65,7 +65,7 @@ const Footer = () => {
               href="https://instagram.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-white hover:text-yellow-400 transition"
+              className="text-white hover:text-pink-400 transition"
             >
               <FaInstagram size={24} />
             </a>
@@ -73,21 +73,23 @@ const Footer = () => {
         </div>
 
         {/* Middle Section: Additional Links */}
-        <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-3 gap-8">
           {/* Help Center */}
           <div>
             <h3 className="text-lg font-semibold mb-3">Help Center</h3>
-            <div className="block text-sm text-gray-400 hover:text-yellow-400 transition">
+            <Link
+              to="/contact"
+              className="block text-sm text-gray-400 hover:text-yellow-400 transition">
               Visit Help Center
-            </div>
+            </Link>
           </div>
 
-          {/* Company */}
+          {/* Company
           <div>
             <h3 className="text-lg font-semibold mb-3">Company</h3>
             <div className="block text-sm text-gray-400 hover:text-yellow-400 transition">About Us</div>
             <div className="block text-sm text-gray-400 hover:text-yellow-400 transition">Collaborators</div>
-          </div>
+          </div> */}
 
           {/* Our Offerings */}
           <div>
@@ -95,15 +97,14 @@ const Footer = () => {
             <div className="block text-sm text-gray-400 hover:text-yellow-400 transition">Ride</div>
             <div className="block text-sm text-gray-400 hover:text-yellow-400 transition">Drive</div>
             <div className="block text-sm text-gray-400 hover:text-yellow-400 transition">CampusCabs for Business</div>
-            <div className="block text-sm text-gray-400 hover:text-yellow-400 transition">Gift Cards</div>
           </div>
 
           {/* Travel */}
           <div>
             <h3 className="text-lg font-semibold mb-3">Travel</h3>
-            <div className="block text-sm text-gray-400 hover:text-yellow-400 transition">Reserve</div>
-            <div className="block text-sm text-gray-400 hover:text-yellow-400 transition">Bus Stands</div>
-            <div className="block text-sm text-gray-400 hover:text-yellow-400 transition">Stations</div>
+            <div className="block text-sm text-gray-400 hover:text-yellow-400 transition">City</div>
+            <div className="block text-sm text-gray-400 hover:text-yellow-400 transition">Bus Stand</div>
+            <div className="block text-sm text-gray-400 hover:text-yellow-400 transition">Station</div>
           </div>
         </div>
 

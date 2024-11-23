@@ -40,8 +40,6 @@ const BookRidePage = ({ onFilterRides }) => {
     }
   };
 
-  console.log(user.name, user.email);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     onFilterRides(formData);
@@ -57,6 +55,15 @@ const BookRidePage = ({ onFilterRides }) => {
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
+  if (!user) {
+    // If user is not logged in, redirect to login page
+    navigate('/login');
+    return null;
+  }
+
+  // Get today's date in yyyy-mm-dd format
+  const today = new Date().toISOString().split('T')[0];
 
   return (
     <div className="flex h-[100%] overflow-hidden bg-white">
@@ -127,6 +134,7 @@ const BookRidePage = ({ onFilterRides }) => {
               value={formData.date}
               onChange={handleChange}
               required
+              min={today} // Set minimum date to today
               className="w-full bg-gray-100 border-2 border-gray-500 text-black py-2 px-3 rounded-md pl-12"
             />
             <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500">
