@@ -24,7 +24,7 @@ const RideHistoryPage = () => {
           setRideHistory(sortedHistory); // Assuming the response returns an array of rides
         } catch (error) {
           console.error("Error fetching ride history:", error);
-          toast.error("Failed to fetch ride history.");
+          toast.error("Ride history missing. Please book a ride to view history.");
         }
       };
 

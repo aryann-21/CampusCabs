@@ -29,7 +29,7 @@ const LoginPage = () => {
         const userName = response.data.name; // Assuming the backend returns the user's name in the response
 
         // Set the user name and email in context
-        setUser({ name: userName, email: response.data.email }); // Store user name and email in context
+        setUser({ name: userName, email: response.data.email, phone: response.data.phone }); // Store user name and email in context
 
         // Navigate to the book ride page
         navigate("/dashboard/book-ride", { state: { name: userName, email: response.data.email } });

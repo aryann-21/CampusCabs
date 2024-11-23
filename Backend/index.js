@@ -62,7 +62,7 @@ app.post('/signup', async (req, res) => {
 
     const token = jwt.sign({ email: user.email, userid: user._id }, 'secret');
     res.cookie('token', token);
-    res.status(201).json({ message: 'User registered successfully', name: user.name, email: user.email });
+    res.status(201).json({ message: 'User registered successfully', name: user.name, email: user.email, phone: user.phone });
   } catch (error) {
     res.status(500).json({ message: 'Error registering user' });
   }
@@ -86,6 +86,7 @@ app.post('/login', async (req, res) => {
       message: 'Login successful',
       name: user.name,
       email: user.email,
+      phone: user.phone,
     });
   } catch (error) {
     res.status(500).json({ message: 'Error logging in' });

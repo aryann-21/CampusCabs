@@ -89,20 +89,6 @@ const DashboardPage = () => {
             </li>
             <li className="mb-4">
               <Link
-                to="profile"
-                onClick={() => setActiveTab("profile")}
-                className={`w-full flex items-center text-left p-2 rounded-lg ${
-                  activeTab === "profile"
-                    ? "bg-blue-100 text-blue-500"
-                    : "text-gray-700"
-                } hover:bg-blue-50 hover:text-blue-500`}
-              >
-                <span className="material-icons mr-3">person</span>
-                Edit Profile
-              </Link>
-            </li>
-            <li className="mb-4">
-              <Link
                 to="available-rides"
                 onClick={() => setActiveTab("available-rides")}
                 className={`w-full flex items-center text-left p-2 rounded-lg ${
@@ -115,14 +101,28 @@ const DashboardPage = () => {
                 All Rides
               </Link>
             </li>
+            <li className="mb-4">
+              <Link
+                to="profile"
+                onClick={() => setActiveTab("profile")}
+                className={`w-full flex items-center text-left p-2 rounded-lg ${
+                  activeTab === "profile"
+                    ? "bg-blue-100 text-blue-500"
+                    : "text-gray-700"
+                } hover:bg-blue-50 hover:text-blue-500`}
+              >
+                <span className="material-icons mr-3">person</span>
+                User Profile
+              </Link>
+            </li>
           </ul>
         </div>
         {/* Footer */}
         <div className="mt-6">
           <ul>
             <li className="mb-4">
-              <Link
-                to="settings"
+              <div
+                
                 onClick={() => setActiveTab("settings")}
                 className={`w-full flex items-center text-left p-2 rounded-lg ${
                   activeTab === "settings"
@@ -132,7 +132,7 @@ const DashboardPage = () => {
               >
                 <span className="material-icons mr-3">settings</span>
                 Settings
-              </Link>
+              </div>
             </li>
             <Link className="mb-4" to="/">
               <button
@@ -140,7 +140,7 @@ const DashboardPage = () => {
                   setUser(null);
                   console.log("Logout");
                 }}
-                className="w-full flex items-center text-left text-blue-400 hover:text-blue-600 duration-150"
+                className="flex items-center text-left bg-red-500 text-white hover:bg-red-700 duration-150 w-fit py-2 px-3 rounded-lg"
               >
                 <span className="material-icons mr-3">logout</span>
                 Logout
