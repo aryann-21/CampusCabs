@@ -137,7 +137,7 @@ const DashboardPage = () => {
             <Link className="mb-4" to="/">
               <button
                 onClick={() => {
-                  setUser(null);
+                  // setUser(null);
                   console.log("Logout");
                 }}
                 className="w-full flex items-center text-left text-blue-400 hover:text-blue-600 duration-150"

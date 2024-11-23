@@ -8,25 +8,26 @@ const ContactPage = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const response = await axios.post("http://localhost:3000/send-whatsapp", {
-  //       name,
-  //       email,
-  //       message,
-  //     });
-  //     alert("Message sent via WhatsApp!");
-  //   } catch (error) {
-  //     alert("Error sending message.");
-  //     console.error("Error:", error);
-  //   }
-  // };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic
-    console.log("Contact Form Submitted:", { name, email, message })};
+    try {
+      const response = await axios.post("http://localhost:3000/send-whatsapp", {
+        name,
+        email,
+        message,
+      });
+      alert("Message sent via WhatsApp!");
+      // console.log(response);
+    } catch (error) {
+      alert("Error sending message.");
+      console.error("Error:", error);
+    }
+  };
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   // Handle form submission logic
+  //   console.log("Contact Form Submitted:", { name, email, message })};
 
   return (
     <div className="relative h-screen">
