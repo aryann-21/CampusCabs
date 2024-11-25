@@ -27,7 +27,7 @@ app.use(cookieParser());
 // const client = twilio(accountSid, authToken);
 
 app.post('/send-whatsapp', (req, res) => {
-  const { name, email, message, driverName, driverPhone, cabNumber, dropLocation, date, time, numberOfPeople, payment } = req.body;
+  const { name, email, message, driverName, driverPhone, cabNumber, dropLocation, date, time, numberOfPeople, payment, uName, uPhone } = req.body;
 
   // If ride details and driver phone number are provided, send the ride details to the driver
   if (driverPhone) {
@@ -36,6 +36,10 @@ app.post('/send-whatsapp', (req, res) => {
 
       🧑‍✈️ *Driver Name:* ${driverName}
       🚖 *Cab Number:* ${cabNumber}
+
+      🧑‍✈️ *passenger Name:* ${uName}
+      📞 *Passenger Phone:* ${uPhone}
+      
       📍 *Drop Location:* ${dropLocation}
       📅 *Pickup Date:* ${date}
       🕑 *Pickup Time:* ${time}
