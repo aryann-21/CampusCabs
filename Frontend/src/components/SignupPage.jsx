@@ -33,7 +33,7 @@ const SignupPage = () => {
         setUser({ name: userName }); // Store user name in context
 
         // Navigate to the book ride page
-        navigate("/dashboard/book-ride"); // No need to pass name in state
+        navigate("/login"); // No need to pass name in state
       }
     } catch (error) {
       console.error("Signup error:", error);
