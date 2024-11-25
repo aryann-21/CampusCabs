@@ -91,7 +91,7 @@ const DashboardPage = () => {
                 Ride History
               </Link>
             </li>
-            <li className="mb-4">
+            {/* <li className="mb-4">
               <Link
                 to="messages"
                 onClick={() => setActiveTab("messages")}
@@ -104,7 +104,7 @@ const DashboardPage = () => {
                 <span className="material-icons mr-3">message</span>
                 Messages
               </Link>
-            </li>
+            </li> */}
             <li className="mb-4">
               <Link
                 to="available-rides"

@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios"; // Make sure Axios is imported for the POST request
 import "react-toastify/dist/ReactToastify.css";
+import { useUser } from "../context/UserContext";
 
 const ConfirmRidePage = () => {
   const location = useLocation();
@@ -10,6 +11,7 @@ const ConfirmRidePage = () => {
 
   const name = 'debugger';
   const message = 'debugging';
+  const { user } = useUser(); // Access user from context
 
   // Destructure ride and email from location.state with fallback
   const { ride = {}, email = "", contactMessage = "" } = location.state || {}; // Assuming contactMessage is passed
@@ -25,6 +27,8 @@ const ConfirmRidePage = () => {
       const response = await axios.post("http://localhost:3000/send-whatsapp", {
         name: name,
         email: email,
+        uName: user.name,
+        uPhone: user.phone,
         message: message,
         driverName: ride.driverName,
         driverPhone: ride.driverPhone,
