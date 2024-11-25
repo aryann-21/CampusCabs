@@ -21,6 +21,7 @@ const ConfirmRidePage = () => {
     }
 
     try {
+      // Send the WhatsApp message
       const response = await axios.post("http://localhost:3000/send-whatsapp", {
         name: name,
         email: email,
@@ -38,9 +39,13 @@ const ConfirmRidePage = () => {
       if (response.status === 200) {
         console.log("Ride history saved:", response.data);
         toast.success("Ride confirmed and history updated!");
+
+        // Save ride history to the backend
+        await saveRideHistory();
+
+        // Navigate to ride history page after confirmation
         navigate("/dashboard/ride-history", {
           state: {
-            rideHistory: response.data.rideHistory,
             rideBooked: true,
           },
         });
@@ -48,6 +53,29 @@ const ConfirmRidePage = () => {
     } catch (error) {
       console.error("Error confirming ride:", error);
       toast.error("Error confirming ride");
+    }
+  };
+
+  // Function to save ride history
+  const saveRideHistory = async () => {
+    try {
+      const rideHistoryResponse = await axios.post("http://localhost:3000/save-ride-history", {
+        email: email,
+        dropLocation: ride.dropLocation,
+        date: ride.date,
+        time: ride.time,
+        payment: ride.fare * ride.numberOfPeople,
+      });
+
+      if (rideHistoryResponse.status === 200) {
+        console.log("Ride history updated:", rideHistoryResponse.data);
+      } else {
+        console.error("Failed to update ride history");
+        toast.error("Failed to update ride history");
+      }
+    } catch (error) {
+      console.error("Error saving ride history:", error);
+      toast.error("Error saving ride history");
     }
   };
 
