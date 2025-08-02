@@ -14,6 +14,9 @@ const GuestLoginButton = ({ compact = false }) => {
       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'}/api/auth/guest`);
 
       if (response.data.success) {
+        // Clear any existing tokens first
+        localStorage.removeItem('token');
+        
         // Store user data in context
         setUser(response.data.user);
         

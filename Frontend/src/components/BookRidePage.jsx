@@ -15,20 +15,7 @@ const BookRidePage = ({ onFilterRides }) => {
   const [selectedFare, setSelectedFare] = useState(null);
   const navigate = useNavigate();
 
-  const { user, isLoading, setUser } = useUser(); // Get user from context
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, [setUser]);
-
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem('user', JSON.stringify(user));
-    }
-  }, [user]);
+  const { user, loading } = useUser(); // Get user from context
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,7 +39,7 @@ const BookRidePage = ({ onFilterRides }) => {
     });
   };
 
-  if (isLoading) {
+  if (loading) {
     return <div>Loading...</div>;
   }
 

@@ -76,7 +76,7 @@ const ConfirmRidePage = () => {
   };
 
   return (
-    <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg max-w-4xl mx-auto mt-4 md:mt-10 mx-4 md:mx-auto">
+    <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg max-w-4xl mx-auto mt-4 md:mt-10 md:mx-auto">
       <ToastContainer />
       <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4 md:mb-6 text-center">
         Confirm Your Ride

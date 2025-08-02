@@ -24,6 +24,9 @@ const GoogleLoginButton = ({ compact = false }) => {
         })
 
         if (response.data.success) {
+          // Clear any existing tokens first
+          localStorage.removeItem('token');
+          
           // Store user data in context
           setUser(response.data.user)
 
