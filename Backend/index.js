@@ -14,7 +14,7 @@ const app = express();
 // CORS setup to allow requests from frontend
 app.use(cors({
   origin: process.env.NODE_ENV === 'production'
-    ? ['https://campuscabs-frontend-di6wq4qyu-aryann-21s-projects.vercel.app', 'https://campuscabs-frontend-di6wq4qyu-aryann-21s-projects.vercel.app/']
+    ? ['https://campuscabs-frontend.vercel.app', 'https://campuscabs-frontend.vercel.app/']
     : true, // Allow all origins in development
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
