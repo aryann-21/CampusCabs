@@ -18,21 +18,23 @@ const LoginPage = () => {
     try {
       // Send a POST request to the backend login route
       const response = await axios.post(
-        "http://localhost:3000/login",
+        "http://localhost:5000/login",
         { email, password },
         { withCredentials: false } // hamesha false rakho because of CORS policy error
       );
 
       // On successful login, navigate to dashboard or handle the response
-      if (response.status === 200) {
+      if (response.status === 200 && response.data.success) {
         console.log("Login successful:", response.data);
-        const userName = response.data.name; // Assuming the backend returns the user's name in the response
-
-        // Set the user name and email in context
-        setUser({ name: userName, email: response.data.email, phone: response.data.phone }); // Store user name and email in context
+        
+        // Store token in localStorage
+        localStorage.setItem('token', response.data.token);
+        
+        // Set the user data in context
+        setUser(response.data.user);
 
         // Navigate to the book ride page
-        navigate("/dashboard/book-ride", { state: { name: userName, email: response.data.email } });
+        navigate("/dashboard/book-ride");
       }
     } catch (error) {
       console.error("Login error:", error);

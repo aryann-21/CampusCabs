@@ -72,6 +72,13 @@ const BookRidePage = ({ onFilterRides }) => {
         <h1 className="text-gray-800 text-xl md:text-3xl font-semibold mb-2 text-center">
           {user ? `Welcome, ${user.name}!` : 'Welcome!'}
         </h1>
+        {user?.isGuest && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4 text-center">
+            <p className="text-blue-800 text-sm">
+              🎉 You're exploring as a guest! Create an account to save your ride history and get personalized features.
+            </p>
+          </div>
+        )}
         <h2 className="text-gray-800 text-2xl md:text-3xl font-bold mb-4 text-center">
           Go anywhere with Campus<span className="text-yellow-500">Cabs</span>
         </h2>

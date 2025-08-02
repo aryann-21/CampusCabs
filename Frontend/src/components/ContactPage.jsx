@@ -10,26 +10,26 @@ const ContactPage = () => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post("http://localhost:3000/send-whatsapp", {
-        name,
-        email,
-        message,
-      });
-      toast.success('Sent message via WhatsApp!');
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await axios.post("http://localhost:3000/send-whatsapp", {
+  //       name,
+  //       email,
+  //       message,
+  //     });
+  //     toast.success('Sent message via WhatsApp!');
       
-      // Redirect to home page after 1 second
-    setTimeout(() => {
-      window.location.href = '/'; 
-    }, 1000);
+  //     // Redirect to home page after 1 second
+  //   setTimeout(() => {
+  //     window.location.href = '/'; 
+  //   }, 1000);
 
-    } catch (error) {
-      alert("Error sending message.");
-      console.error("Error:", error);
-    }
-  };
+  //   } catch (error) {
+  //     alert("Error sending message.");
+  //     console.error("Error:", error);
+  //   }
+  // };
 
   // const handleSubmit = (e) => {
   //   e.preventDefault();

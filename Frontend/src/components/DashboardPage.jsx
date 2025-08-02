@@ -3,7 +3,6 @@ import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import BookRidePage from "./BookRidePage";
 import RideHistoryPage from "./RideHistoryPage";
 import MessagesPage from "./MessagesPage";
-import ProfilePage from "./ProfilePage";
 import AvailableRidesPage from "./AvailableRidesPage";
 import ConfirmRidePage from "./ConfirmRidePage"; // Import the new page
 import { allRides } from "../data/allRides"; // Import allRides data
@@ -17,24 +16,12 @@ const DashboardPage = () => {
   const navigate = useNavigate();
 
   // Get user details from context
-  const { user, setUser } = useUser();
+  const { user, logout } = useUser();
   const userEmail = user?.email; // Access the user's email
 
-  const handleLogout = async () => {
-    try {
-      // Send a POST request to the backend logout route
-      await axios.get('http://localhost:3000/logout');
-
-      // Clear user data from context
-      setUser(null);
-
-      // Optionally, clear user data from local storage or cookies
-      localStorage.removeItem('user');
-      // Redirect user to login page after logout
-      navigate('/');
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
+  const handleLogout = () => {
+    logout();
+    navigate("/");
   };
 
   const handleFilterRides = (filters) => {
@@ -119,49 +106,52 @@ const DashboardPage = () => {
                 All Rides
               </Link>
             </li>
-            <li className="mb-4">
-              <Link
-                to="profile"
-                onClick={() => setActiveTab("profile")}
-                className={`w-full flex items-center text-left p-2 rounded-lg ${
-                  activeTab === "profile"
-                    ? "bg-blue-100 text-blue-500"
-                    : "text-gray-700"
-                } hover:bg-blue-50 hover:text-blue-500`}
-              >
-                <span className="material-icons mr-3">person</span>
-                User Profile
-              </Link>
-            </li>
           </ul>
         </div>
-        {/* Footer */}
+        {/* Footer with User Info */}
         <div className="mt-6">
-          <ul>
-            <li className="mb-4">
-              <div
-                onClick={() => setActiveTab("settings")}
-                className={`w-full flex items-center text-left p-2 rounded-lg ${
-                  activeTab === "settings"
-                    ? "bg-blue-100 text-blue-500"
-                    : "text-gray-700"
-                } hover:bg-blue-50 hover:text-blue-500`}
-              >
-                <span className="material-icons mr-3">settings</span>
-                Settings
+          {/* User Information */}
+          <div className="bg-gray-50 rounded-lg p-2 mb-4">
+            <div className="flex items-center space-x-3">
+              {/* User Avatar */}
+              <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-300 flex items-center justify-center">
+                {user?.profilePicture ? (
+                  <img
+                    src={user.profilePicture}
+                    alt="Profile"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="material-icons text-gray-600 text-xl">
+                    User
+                  </span>
+                )}
               </div>
-            </li>
-            {/* Logout Button */}
-            <div className="mt-6 flex justify-start">
-              <button
-                onClick={handleLogout}
-                className="flex items-center text-left bg-red-500 text-white hover:bg-red-700 duration-150 w-fit py-2 px-3 rounded-lg"
-              >
-                <span className="material-icons mr-3">logout</span>
-                Logout
-              </button>
+              {/* User Details */}
+              <div className="flex-1 min-w-0">
+                <h3 className="text-xs font-semibold text-gray-900 truncate">
+                  {user?.name || "User"}
+                  {user?.isGuest && (
+                    <span className="ml-1 text-xs bg-gray-200 text-gray-600 px-1 rounded">
+                      Guest
+                    </span>
+                  )}
+                </h3>
+                <p className="text-xs text-gray-500 truncate">
+                  {user?.email || "user@example.com"}
+                </p>
+              </div>
             </div>
-          </ul>
+          </div>
+
+          {/* Logout Button */}
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center bg-red-500 text-white hover:bg-red-600 transition-colors duration-200 py-2 px-4 rounded-lg text-sm font-medium"
+          >
+            <span className="material-icons mr-2 text-lg">logout</span>
+            Logout
+          </button>
         </div>
       </aside>
 
@@ -188,7 +178,6 @@ const DashboardPage = () => {
             }
           />
           <Route path="messages" element={<MessagesPage />} />
-          <Route path="profile" element={<ProfilePage />} />
           <Route
             path="available-rides"
             element={<AvailableRidesPage allRides={allRides} />}

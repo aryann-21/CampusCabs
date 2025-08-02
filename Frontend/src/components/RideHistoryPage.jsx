@@ -15,16 +15,28 @@ const RideHistoryPage = () => {
     if (user) {
       const fetchRideHistory = async () => {
         try {
+          const token = localStorage.getItem('token');
+          
           const response = await axios.get(
-            `http://localhost:3000/ride-history/${user.email}` // Adjust API endpoint as needed
+            'http://localhost:5000/ride-history',
+            {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            }
           );
+          
           const sortedHistory = response.data.sort(
             (a, b) => new Date(b.date) - new Date(a.date)
           ); // Sort the rides in descending order by date
           setRideHistory(sortedHistory); // Assuming the response returns an array of rides
         } catch (error) {
           console.error("Error fetching ride history:", error);
-          toast.error("Ride history missing. Please book a ride to view history.");
+          if (user?.isGuest) {
+            toast.info("Guest users don't have ride history. Create an account to save your rides!");
+          } else {
+            toast.error("Ride history missing. Please book a ride to view history.");
+          }
         }
       };
 
@@ -60,6 +72,14 @@ const RideHistoryPage = () => {
     <div className="bg-white p-6 rounded-lg shadow-lg">
       <ToastContainer />
       <h2 className="text-2xl font-semibold mb-4">Ride History</h2>
+      
+      {user?.isGuest && (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+          <p className="text-yellow-800 text-sm">
+            👤 <strong>Guest Mode:</strong> Your ride history is not saved. Create an account to save your rides and access personalized features.
+          </p>
+        </div>
+      )}
 
       {/* Display the ride history */}
       {rideHistory.length > 0 ? (

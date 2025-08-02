@@ -4,9 +4,13 @@ import { motion } from "framer-motion";
 import Typewriter from "typewriter-effect";
 import bgImg from "../assets/tukTuk1.jpg";
 import FeaturesSection from "./FeaturesSection";
+import { useUser } from "../context/UserContext";
+import GoogleLoginButton from "./GoogleLogin";
+import GuestLoginButton from "./GuestLoginButton";
 
 const HeroSection = () => {
   const featuresRef = useRef(null);
+  const { user, logout } = useUser();
 
   const scrollToTop = () => {
     window.scrollTo({
@@ -54,22 +58,33 @@ const HeroSection = () => {
               Contact
             </Link>
           </li>
-          <li>
-            <Link
-              to="/login"
-              className="border-[3px] border-yellow-500 text-yellow-500 px-5 py-2 rounded-full hover:bg-black duration-150"
-            >
-              Login
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/signup"
-              className="border-[3px] border-blue-300 text-blue-300 px-5 py-2 rounded-full hover:bg-black hover:border-blue-400 hover:text-blue-400 duration-150"
-            >
-              Sign Up
-            </Link>
-          </li>
+          {user ? (
+            <>
+              <li>
+                <Link
+                  to="/dashboard/book-ride"
+                  className="border-[3px] border-green-500 text-green-500 px-5 py-2 rounded-full hover:bg-black duration-150"
+                >
+                  Book Ride
+                </Link>
+              </li>
+              <li>
+                <button
+                  onClick={logout}
+                  className="border-[3px] border-red-500 text-red-500 px-5 py-2 rounded-full hover:bg-black duration-150"
+                >
+                  Logout
+                </button>
+              </li>
+            </>
+          ) : (
+            <li>
+              <div className="flex items-center space-x-3">
+                <GoogleLoginButton compact={true} />
+                <GuestLoginButton compact={true} />
+              </div>
+            </li>
+          )}
         </ul>
       </div>
 

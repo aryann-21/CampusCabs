@@ -20,20 +20,22 @@ const SignupPage = () => {
     try {
       // Send a POST request to the backend signup route
       const response = await axios.post(
-        "http://localhost:3000/signup", // Your backend signup endpoint
+        "http://localhost:5000/signup", // Your backend signup endpoint
         { name, email, password, phone }
       );
 
       // On successful signup, navigate to dashboard
-      if (response.status === 201) {
+      if (response.status === 201 && response.data.success) {
         console.log("Signup successful:", response.data);
-        const userName = response.data.name; // Get the user's name from the response
+        
+        // Store token in localStorage
+        localStorage.setItem('token', response.data.token);
+        
+        // Set the user data in context
+        setUser(response.data.user);
 
-        // Set the user name in context
-        setUser({ name: userName }); // Store user name in context
-
-        // Navigate to the book ride page
-        navigate("/login"); // No need to pass name in state
+        // Navigate directly to the book ride page
+        navigate("/dashboard/book-ride");
       }
     } catch (error) {
       console.error("Signup error:", error);
