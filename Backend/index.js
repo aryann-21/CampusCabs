@@ -17,8 +17,6 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
-// app.use(cors());
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -31,21 +29,18 @@ app.use(cookieParser());
 // app.post('/send-whatsapp', (req, res) => {
 //   const { name, email, message } = req.body;
 
-//   client.messages
-//     .create({
-//       body: `New Contact Form Submission:\nName: ${name}\nEmail: ${email}\nMessage: ${message}`,
-//       from: 'whatsapp:+14155238886',  // Your Twilio WhatsApp-enabled number
-//       to: 'whatsapp:+918690892181',     // Your personal WhatsApp number (replace with your number)
-//     })
-//     .then((message) => {
-//       console.log(message.sid);
-//       res.status(200).send('Message sent successfully!');
-//     })
-//     .catch((error) => {
-//       console.error('Error sending message:', error);
-//       res.status(500).send('Error sending message');
-//     });
-// });
+client.messages
+  .create({
+    body: `New Contact Form Submission:\nName: ${name}\nEmail: ${email}\nMessage: ${message}`,
+    from: `whatsapp:${phoneNumber}`,  // Your Twilio WhatsApp-enabled number
+    to: 'whatsapp:+918690892181',     // Your personal WhatsApp number (replace with your number)
+  })
+  .then(() => {
+    res.status(200).send('Message sent successfully!');
+  })
+  .catch((error) => {
+    res.status(500).send('Error sending message');
+});
 
 // Register a new user
 app.post('/signup', async (req, res) => {
@@ -102,17 +97,36 @@ app.post('/save-ride-history', async (req, res) => {
   const { email, dropLocation, date, time, payment } = req.body;  // Assuming email is passed to identify the user
 
   try {
-    // Find the user by their email
     const user = await userModel.findOne({ email });
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    // Add the ride to the user's ride history
     user.rideHistory.push({ dropLocation, date, time, payment });
     await user.save();
 
     res.status(200).json({ message: 'Ride history updated', rideHistory: user.rideHistory });
   } catch (error) {
     res.status(500).json({ message: 'Error saving ride history' });
+  }
+});
+
+app.get('/ride-history/:email', async (req, res) => {
+  const { email } = req.params;
+
+  try {
+    const user = await userModel.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const rideHistory = user.rideHistory;
+
+    if (!rideHistory || rideHistory.length === 0) {
+      return res.status(404).json({ message: 'No ride history available' });
+    }
+
+    res.status(200).json(rideHistory);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching ride history' });
   }
 });
 
