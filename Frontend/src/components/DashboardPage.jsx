@@ -9,15 +9,33 @@ import ConfirmRidePage from "./ConfirmRidePage"; // Import the new page
 import { allRides } from "../data/allRides"; // Import allRides data
 import { rideHistory } from "../data/rideHistory"; // Import rideHistory data
 import { useUser } from "../context/UserContext"; // Import your UserContext
+import axios from "axios"; // Import axios for making API calls
 
 const DashboardPage = () => {
   const [activeTab, setActiveTab] = useState("book-ride");
   const [filteredRides, setFilteredRides] = useState([]);
   const navigate = useNavigate();
-  
+
   // Get user details from context
-  const { user } = useUser(); 
+  const { user, setUser } = useUser();
   const userEmail = user?.email; // Access the user's email
+
+  const handleLogout = async () => {
+    try {
+      // Send a POST request to the backend logout route
+      await axios.get('http://localhost:3000/logout');
+
+      // Clear user data from context
+      setUser(null);
+
+      // Optionally, clear user data from local storage or cookies
+      localStorage.removeItem('user');
+      // Redirect user to login page after logout
+      navigate('/');
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
+  };
 
   const handleFilterRides = (filters) => {
     const filtered = allRides.filter(
@@ -27,9 +45,9 @@ const DashboardPage = () => {
     );
     setFilteredRides(filtered);
     navigate("/dashboard/filtered-rides", {
-      state: { 
+      state: {
         filteredRides: filtered,
-        userEmail: userEmail // Pass user's email here
+        userEmail: userEmail, // Pass user's email here
       },
     });
   };
@@ -122,7 +140,6 @@ const DashboardPage = () => {
           <ul>
             <li className="mb-4">
               <div
-                
                 onClick={() => setActiveTab("settings")}
                 className={`w-full flex items-center text-left p-2 rounded-lg ${
                   activeTab === "settings"
@@ -134,18 +151,16 @@ const DashboardPage = () => {
                 Settings
               </div>
             </li>
-            <Link className="mb-4" to="/">
+            {/* Logout Button */}
+            <div className="mt-6 flex justify-start">
               <button
-                onClick={() => {
-                  setUser(null);
-                  console.log("Logout");
-                }}
+                onClick={handleLogout}
                 className="flex items-center text-left bg-red-500 text-white hover:bg-red-700 duration-150 w-fit py-2 px-3 rounded-lg"
               >
                 <span className="material-icons mr-3">logout</span>
                 Logout
               </button>
-            </Link>
+            </div>
           </ul>
         </div>
       </aside>
@@ -156,11 +171,21 @@ const DashboardPage = () => {
         <Routes>
           <Route
             path="book-ride"
-            element={<BookRidePage onFilterRides={handleFilterRides} userEmail={userEmail} />}
+            element={
+              <BookRidePage
+                onFilterRides={handleFilterRides}
+                userEmail={userEmail}
+              />
+            }
           />
           <Route
             path="ride-history"
-            element={<RideHistoryPage email={userEmail} rideHistory={user?.rideHistory} />}
+            element={
+              <RideHistoryPage
+                email={userEmail}
+                rideHistory={user?.rideHistory}
+              />
+            }
           />
           <Route path="messages" element={<MessagesPage />} />
           <Route path="profile" element={<ProfilePage />} />
@@ -177,7 +202,10 @@ const DashboardPage = () => {
               />
             }
           />
-          <Route path="confirm-ride" element={<ConfirmRidePage userEmail={userEmail} />} />
+          <Route
+            path="confirm-ride"
+            element={<ConfirmRidePage userEmail={userEmail} />}
+          />
         </Routes>
       </main>
     </div>

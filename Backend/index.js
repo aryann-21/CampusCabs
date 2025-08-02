@@ -26,20 +26,69 @@ app.use(cookieParser());
 // const authToken = process.env.AUTH_TOKEN;   // Replace with your Twilio Auth Token
 // const client = twilio(accountSid, authToken);
 
-// app.post('/send-whatsapp', (req, res) => {
-//   const { name, email, message } = req.body;
+app.post('/send-whatsapp', (req, res) => {
+  const { name, email, message, driverName, driverPhone, cabNumber, dropLocation, date, time, numberOfPeople, payment } = req.body;
 
-client.messages
-  .create({
-    body: `New Contact Form Submission:\nName: ${name}\nEmail: ${email}\nMessage: ${message}`,
-    from: `whatsapp:${phoneNumber}`,  // Your Twilio WhatsApp-enabled number
-    to: 'whatsapp:+918690892181',     // Your personal WhatsApp number (replace with your number)
-  })
-  .then(() => {
-    res.status(200).send('Message sent successfully!');
-  })
-  .catch((error) => {
-    res.status(500).send('Error sending message');
+  // If ride details and driver phone number are provided, send the ride details to the driver
+  if (driverPhone) {
+    const rideMessage = `
+      🚗 *Ride Confirmation* 🚗
+
+      🧑‍✈️ *Driver Name:* ${driverName}
+      🚖 *Cab Number:* ${cabNumber}
+      📍 *Drop Location:* ${dropLocation}
+      📅 *Pickup Date:* ${date}
+      🕑 *Pickup Time:* ${time}
+      👥 *Number of People:* ${numberOfPeople}
+      💸 *Total Fare:* Rs ${payment}/-
+      
+      🚨 *Important Details:*
+      - Please be on time for the pickup.
+      - Confirm the number of passengers and the correct pickup location.
+
+      Thank you for driving with us! 👍
+    `;
+
+    // Send message to the driver on WhatsApp
+    client.messages.create({
+      body: rideMessage,
+      from: `whatsapp:${phoneNumber}`,  // Your Twilio WhatsApp-enabled number
+      to: `whatsapp:+91${driverPhone}`,   // Driver's phone number with country code
+    })
+      .then(() => {
+        console.log('Ride details sent to the driver.');
+        res.status(200).send('Message sent successfully!');
+      })
+      .catch((error) => {
+        console.error('Error sending ride details:', error);
+      });
+  }
+
+  // If contact form details are provided, send the contact form to your WhatsApp
+  if (message !== 'debugging' && name !== 'debugger' && email) {
+    const contactMessage = `
+      New Contact Form Submission:
+
+      Name: ${name}
+      Email: ${email}
+      Message: ${message}
+    `;
+
+    // Send contact form details to your WhatsApp
+    client.messages.create({
+      body: contactMessage,
+      from: `whatsapp:${phoneNumber}`,  // Your Twilio WhatsApp-enabled number
+      to: 'whatsapp:+918690892181',     // Your personal WhatsApp number
+    })
+      .then(() => {
+        console.log('Contact form message sent to you.');
+        res.status(200).send('Message sent successfully!');
+      })
+      .catch((error) => {
+        console.error('Error sending contact form message:', error);
+        res.status(500).send('Error sending message');
+      });
+  }
 });
 
 // Register a new user
