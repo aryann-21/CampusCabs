@@ -18,7 +18,7 @@ const RideHistoryPage = () => {
           const token = localStorage.getItem('token');
           
           const response = await axios.get(
-            'http://localhost:5000/ride-history',
+            `${import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'}/ride-history`,
             {
               headers: {
                 Authorization: `Bearer ${token}`
@@ -69,13 +69,13 @@ const RideHistoryPage = () => {
   }, [location.state]);
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg">
+    <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg">
       <ToastContainer />
-      <h2 className="text-2xl font-semibold mb-4">Ride History</h2>
+              <h2 className="text-xl md:text-2xl font-semibold mb-4">Ride History</h2>
       
       {user?.isGuest && (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-          <p className="text-yellow-800 text-sm">
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 md:p-4 mb-4 md:mb-6">
+          <p className="text-yellow-800 text-xs md:text-sm">
             👤 <strong>Guest Mode:</strong> Your ride history is not saved. Create an account to save your rides and access personalized features.
           </p>
         </div>
@@ -87,14 +87,14 @@ const RideHistoryPage = () => {
           {rideHistory.map((ride, index) => (
             <li
               key={index}
-              className="bg-gray-100 p-4 rounded-lg shadow hover:bg-gray-200 hover:-translate-y-1 duration-150"
+              className="bg-gray-100 p-3 md:p-4 rounded-lg shadow hover:bg-gray-200 hover:-translate-y-1 duration-150"
             >
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-gray-600">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-2 sm:space-y-0">
+                <div className="flex-1">
+                  <p className="text-gray-600 text-sm md:text-base">
                     Drop Location: {ride.dropLocation}
                   </p>
-                  <p className="text-gray-600">
+                  <p className="text-gray-600 text-sm md:text-base">
                     Date:{" "}
                     {new Date(ride.date).toLocaleDateString("en-IN", {
                       day: "numeric",
@@ -102,10 +102,10 @@ const RideHistoryPage = () => {
                       year: "numeric",
                     })}
                   </p>
-                  <p className="text-gray-600">Time: {ride.time}</p>
-                  <p className="text-gray-600">Payment: Rs {ride.payment}/-</p>
+                  <p className="text-gray-600 text-sm md:text-base">Time: {ride.time}</p>
+                  <p className="text-gray-600 text-sm md:text-base">Payment: Rs {ride.payment}/-</p>
                 </div>
-                <span className="material-icons text-gray-500">
+                <span className="material-icons text-gray-500 self-end sm:self-center">
                   directions_car
                 </span>
               </div>

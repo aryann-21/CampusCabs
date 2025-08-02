@@ -13,7 +13,9 @@ const app = express();
 
 // CORS setup to allow requests from frontend
 app.use(cors({
-  origin: 'http://localhost:5173', // Your frontend URL
+  origin: process.env.NODE_ENV === 'production'
+    ? ['https://campuscabs-frontend-di6wq4qyu-aryann-21s-projects.vercel.app', 'https://campuscabs-frontend-di6wq4qyu-aryann-21s-projects.vercel.app/']
+    : true, // Allow all origins in development
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -35,9 +37,9 @@ const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 app.post('/api/auth/google', async (req, res) => {
   try {
     const { userInfo, accessToken, credential } = req.body;
-    
+
     let userData;
-    
+
     // Handle new format (userInfo + accessToken)
     if (userInfo && accessToken) {
       userData = {

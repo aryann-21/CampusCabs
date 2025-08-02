@@ -20,7 +20,7 @@ const SignupPage = () => {
     try {
       // Send a POST request to the backend signup route
       const response = await axios.post(
-        "http://localhost:5000/signup", // Your backend signup endpoint
+        `${import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'}/signup`, // Your backend signup endpoint
         { name, email, password, phone }
       );
 
@@ -64,7 +64,7 @@ const SignupPage = () => {
         </Link>
       </span>
 
-      <div className="absolute inset-0 flex items-center justify-center h-full bg-black bg-opacity-50">
+      <div className="absolute inset-0 flex items-center justify-center h-full bg-black bg-opacity-50 px-4">
         <div className="bg-gray-300 rounded-xl shadow-lg max-w-md w-full bg-opacity-50 backdrop-blur-sm">
           <div className="bg-gray-800 text-yellow-300 py-6 px-8 rounded-t-xl">
             <h2 className="text-3xl font-bold text-center">

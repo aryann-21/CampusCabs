@@ -66,9 +66,9 @@ const BookRidePage = ({ onFilterRides }) => {
   const today = new Date().toISOString().split('T')[0];
 
   return (
-    <div className="flex h-[100%] overflow-hidden bg-white">
+    <div className="flex flex-col lg:flex-row h-[100%] overflow-hidden bg-white">
       {/* Left side - Booking form */}
-      <div className="w-full md:w-1/2 p-4 md:p-6 flex flex-col justify-center items-center">
+      <div className="w-full lg:w-1/2 p-4 md:p-6 flex flex-col justify-center items-center">
         <h1 className="text-gray-800 text-xl md:text-3xl font-semibold mb-2 text-center">
           {user ? `Welcome, ${user.name}!` : 'Welcome!'}
         </h1>
@@ -85,7 +85,7 @@ const BookRidePage = ({ onFilterRides }) => {
         <p className="text-gray-600 mb-6 text-center">
           Request a ride, hop in, and go.
         </p>
-        <form onSubmit={handleSubmit} className="space-y-3 w-full max-w-sm">
+        <form onSubmit={handleSubmit} className="space-y-3 w-full max-w-sm px-4">
           <div className="relative">
             <select
               name="dropLocation"

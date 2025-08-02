@@ -9,10 +9,13 @@ import { allRides } from "../data/allRides"; // Import allRides data
 import { rideHistory } from "../data/rideHistory"; // Import rideHistory data
 import { useUser } from "../context/UserContext"; // Import your UserContext
 import axios from "axios"; // Import axios for making API calls
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const DashboardPage = () => {
   const [activeTab, setActiveTab] = useState("book-ride");
   const [filteredRides, setFilteredRides] = useState([]);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
 
   // Get user details from context
@@ -42,12 +45,20 @@ const DashboardPage = () => {
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
-      <aside className="fixed top-0 left-0 w-64 h-full bg-white shadow-lg p-6 flex flex-col justify-between">
+      <aside className={`fixed top-0 left-0 w-64 h-full bg-white shadow-lg p-4 md:p-6 flex flex-col justify-between transform transition-transform duration-300 ease-in-out z-40 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
         <div>
           {/* Logo/Header */}
-          <div className="flex items-center mb-6">
-            <span className="material-icons mr-3">dashboard</span>
-            <h2 className="text-2xl font-bold">Dashboard</h2>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center">
+              <span className="material-icons mr-3">dashboard</span>
+              <h2 className="text-xl md:text-2xl font-bold">Dashboard</h2>
+            </div>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="md:hidden text-gray-500 hover:text-gray-700"
+            >
+              <span className="material-icons">close</span>
+            </button>
           </div>
           <ul>
             <li className="mb-4">
@@ -156,7 +167,17 @@ const DashboardPage = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 ml-64 p-6 overflow-y-auto">
+      <main className="flex-1 md:ml-64 p-4 md:p-6 overflow-y-auto">
+        {/* Mobile Menu Button */}
+        <div className="md:hidden mb-4">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+          >
+            <span className="material-icons">menu</span>
+          </button>
+        </div>
+        
         {/* Tab Content */}
         <Routes>
           <Route

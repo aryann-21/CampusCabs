@@ -49,7 +49,7 @@ const ConfirmRidePage = () => {
     try {
       const token = localStorage.getItem('token');
       
-      const rideHistoryResponse = await axios.post("http://localhost:5000/save-ride-history", {
+      const rideHistoryResponse = await axios.post(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'}/save-ride-history`, {
         dropLocation: ride.dropLocation,
         date: ride.date,
         time: ride.time,
@@ -76,9 +76,9 @@ const ConfirmRidePage = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg max-w-4xl mx-auto mt-10">
+    <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg max-w-4xl mx-auto mt-4 md:mt-10 mx-4 md:mx-auto">
       <ToastContainer />
-      <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+      <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4 md:mb-6 text-center">
         Confirm Your Ride
       </h2>
       
@@ -89,9 +89,9 @@ const ConfirmRidePage = () => {
           </p>
         </div>
       )}
-      <div className="flex flex-wrap justify-between mb-6 text-[17px]">
+      <div className="flex flex-col lg:flex-row justify-between mb-6 text-sm md:text-[17px]">
         {/* Left Column - Rider Details */}
-        <div className="w-full md:w-1/2 p-4 space-y-4">
+        <div className="w-full lg:w-1/2 p-2 md:p-4 space-y-3 md:space-y-4">
           <div className="px-4 py-2 bg-gray-100 rounded-md shadow-sm">
             <p className="font-semibold text-gray-900">Driver Name:</p>
             <p className="text-gray-800">{ride.driverName}</p>
@@ -117,7 +117,7 @@ const ConfirmRidePage = () => {
         </div>
 
         {/* Right Column - Ride Details */}
-        <div className="w-full md:w-1/2 p-4 space-y-4">
+        <div className="w-full lg:w-1/2 p-2 md:p-4 space-y-3 md:space-y-4">
           <div className="px-4 py-2 bg-gray-100 rounded-md shadow-sm">
             <p className="font-semibold text-gray-900">Availability:</p>
             <p

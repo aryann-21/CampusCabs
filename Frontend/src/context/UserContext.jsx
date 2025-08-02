@@ -1,5 +1,7 @@
 // src/context/UserContext.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from 'axios';
 
 const UserContext = createContext();
@@ -13,7 +15,7 @@ export const UserProvider = ({ children }) => {
     const token = localStorage.getItem('token');
     if (token) {
       // Verify token with backend
-      axios.get('http://localhost:5000/api/auth/verify', {
+      axios.get(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'}/api/auth/verify`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(response => {
