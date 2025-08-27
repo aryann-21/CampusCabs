@@ -14,13 +14,33 @@ const app = express();
 
 // CORS setup to allow requests from frontend
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? ['https://campuscabs-frontend.vercel.app', 'https://campuscabs-frontend.vercel.app/']
-    : true, // Allow all origins in development
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+
+    const allowedOrigins = [
+      'https://campuscabs-frontend.vercel.app',
+      'https://campuscabs-frontend.vercel.app/',
+      'http://localhost:3000',
+      'http://localhost:5173'
+    ];
+
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  preflightContinue: false,
+  optionsSuccessStatus: 200
 }));
+
+// Handle preflight requests explicitly
+app.options('*', cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -37,6 +57,13 @@ const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 // Google OAuth Routes
 app.post('/api/auth/google', async (req, res) => {
   try {
+    console.log('Google auth request received:', {
+      body: req.body,
+      headers: req.headers,
+      origin: req.headers.origin,
+      method: req.method
+    });
+
     const { userInfo, accessToken, credential } = req.body;
 
     let userData;
@@ -67,8 +94,11 @@ app.post('/api/auth/google', async (req, res) => {
       };
     }
     else {
+      console.log('Missing user info or credential in request body');
       return res.status(400).json({ success: false, message: 'Missing user info or credential' });
     }
+
+    console.log('Processed user data:', userData);
 
     // Check if user already exists
     let user = await userModel.findOne({ email: userData.email });
@@ -82,6 +112,7 @@ app.post('/api/auth/google', async (req, res) => {
         profilePicture: userData.picture,
         isGoogleUser: true
       });
+      console.log('New user created:', user._id);
     } else {
       // Update existing user with Google info if not already set
       if (!user.googleId) {
@@ -91,6 +122,7 @@ app.post('/api/auth/google', async (req, res) => {
           user.profilePicture = userData.picture;
         }
         await user.save();
+        console.log('Existing user updated with Google info:', user._id);
       }
     }
 
@@ -100,6 +132,8 @@ app.post('/api/auth/google', async (req, res) => {
       process.env.JWT_SECRET || 'secret',
       { expiresIn: '7d' }
     );
+
+    console.log('Google auth successful for user:', user.email);
 
     res.status(200).json({
       success: true,
@@ -116,7 +150,11 @@ app.post('/api/auth/google', async (req, res) => {
 
   } catch (error) {
     console.error('Google auth error:', error);
-    res.status(500).json({ success: false, message: 'Authentication failed' });
+    res.status(500).json({
+      success: false,
+      message: 'Authentication failed',
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+    });
   }
 });
 
@@ -465,6 +503,19 @@ app.get('/logout', (req, res) => {
 // Simple test route
 app.get('/test', (req, res) => {
   res.json({ message: 'Backend is working!', timestamp: new Date().toISOString() });
+});
+
+// Health check endpoint for CORS testing
+app.get('/health', (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.json({
+    status: 'OK',
+    message: 'Backend is healthy!',
+    timestamp: new Date().toISOString(),
+    cors: 'enabled'
+  });
 });
 
 // Test endpoint to verify user email retrieval
