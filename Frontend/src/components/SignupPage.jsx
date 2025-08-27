@@ -20,7 +20,7 @@ const SignupPage = () => {
     try {
       // Send a POST request to the backend signup route
       const response = await axios.post(
-        `https://campuscabs-backend-75tijk2le-aryann-21s-projects.vercel.app/signup`, // Your backend signup endpoint
+        `https://campuscabs-backend.vercel.app/signup`, // Your backend signup endpoint
         { name, email, password, phone }
       );
 

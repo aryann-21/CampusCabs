@@ -1,5 +1,5 @@
 // API Configuration
-export const API_BASE_URL = 'https://campuscabs-backend-75tijk2le-aryann-21s-projects.vercel.app';
+export const API_BASE_URL = 'https://campuscabs-backend.vercel.app';
 
 // API Endpoints
 export const API_ENDPOINTS = {
