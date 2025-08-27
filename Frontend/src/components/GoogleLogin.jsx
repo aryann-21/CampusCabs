@@ -18,7 +18,7 @@ const GoogleLoginButton = ({ compact = false }) => {
         )
 
         // Send the user info to your backend
-        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'}/api/auth/google`, {
+        const response = await axios.post(`https://campuscabs-backend-75tijk2le-aryann-21s-projects.vercel.app/api/auth/google`, {
           userInfo: userInfoResponse.data,
           accessToken: tokenResponse.access_token,
         })

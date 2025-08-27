@@ -18,7 +18,7 @@ const LoginPage = () => {
     try {
       // Send a POST request to the backend login route
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'}/login`,
+        `https://campuscabs-backend-75tijk2le-aryann-21s-projects.vercel.app/login`,
         { email, password },
         { withCredentials: false } // hamesha false rakho because of CORS policy error
       );
