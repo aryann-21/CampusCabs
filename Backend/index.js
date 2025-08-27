@@ -19,6 +19,10 @@ app.use(cors({
     if (!origin) return callback(null, true);
 
     const allowedOrigins = [
+      'https://campuscabs-frontend-4lpym0wq2-aryann-21s-projects.vercel.app',
+      'https://campuscabs-frontend-4lpym0wq2-aryann-21s-projects.vercel.app/',
+      'https://campuscabs-frontend-aryann-21-aryann-21s-projects.vercel.app',
+      'https://campuscabs-frontend-aryann-21-aryann-21s-projects.vercel.app/',
       'https://campuscabs-frontend.vercel.app',
       'https://campuscabs-frontend.vercel.app/',
       'http://localhost:3000',
