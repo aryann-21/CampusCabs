@@ -49,12 +49,23 @@ const ConfirmRidePage = () => {
     try {
       const token = localStorage.getItem('token');
       
-      const rideHistoryResponse = await axios.post(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'}/save-ride-history`, {
+      // Log the data being sent to backend
+      const rideData = {
         dropLocation: ride.dropLocation,
         date: ride.date,
         time: ride.time,
         payment: ride.fare * ride.numberOfPeople,
-      }, {
+        numberOfPeople: ride.numberOfPeople,
+        fare: ride.fare,
+        driverName: ride.driverName,
+        driverPhone: ride.driverPhone,
+        cabNumber: ride.cabNumber,
+      };
+      
+      console.log('Sending ride data to backend:', rideData);
+      console.log('Current user:', user);
+      
+      const rideHistoryResponse = await axios.post(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'}/save-ride-history`, rideData, {
         headers: {
           Authorization: `Bearer ${token}`
         }

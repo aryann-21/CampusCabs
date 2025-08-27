@@ -8,6 +8,7 @@ const { OAuth2Client } = require('google-auth-library');
 const userModel = require('./models/userModel.js');
 
 // const twilio = require('twilio');
+const { sendRideConfirmationEmail } = require('./services/sendgridService');
 
 const app = express();
 
@@ -346,6 +347,10 @@ app.post('/login', async (req, res) => {
 
 // Save ride to user's history with authentication
 app.post('/save-ride-history', async (req, res) => {
+  console.log('🚗 /save-ride-history endpoint hit!');
+  console.log('Request body:', req.body);
+  console.log('Authorization header:', req.headers.authorization);
+
   try {
     const token = req.headers.authorization?.split(' ')[1];
 
@@ -357,7 +362,8 @@ app.post('/save-ride-history', async (req, res) => {
 
     // Check if it's a guest user
     if (decoded.isGuest) {
-      // For guest users, we don't save to database but return success
+      // For guest users, we don't save to database and can't send email
+      console.log('Guest user confirmed ride - no email sent');
       return res.status(200).json({
         message: 'Ride confirmed (Guest mode - not saved to history)',
         isGuest: true
@@ -370,10 +376,46 @@ app.post('/save-ride-history', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const { dropLocation, date, time, payment } = req.body;
+    const { dropLocation, date, time, payment, numberOfPeople, fare, driverName, driverPhone, cabNumber } = req.body;
+
+    // Debug: Log all received data
+    console.log('Received ride data:', { dropLocation, date, time, payment, numberOfPeople, fare, driverName, driverPhone, cabNumber });
+    console.log('User found:', { name: user.name, email: user.email });
 
     user.rideHistory.push({ dropLocation, date, time, payment });
     await user.save();
+
+    // Send confirmation email if ride details are provided
+    console.log('Checking email conditions:', {
+      hasDriverName: !!driverName,
+      hasDriverPhone: !!driverPhone,
+      hasCabNumber: !!cabNumber,
+      hasNumberOfPeople: !!numberOfPeople,
+      hasFare: !!fare
+    });
+
+    if (driverName && driverPhone && cabNumber && numberOfPeople && fare) {
+      // Check if user has an email address
+      if (!user.email) {
+        console.log('User has no email address, skipping email confirmation');
+        return res.status(200).json({ message: 'Ride history updated (no email sent - user has no email)', rideHistory: user.rideHistory });
+      }
+
+      try {
+        const rideData = { dropLocation, date, time, numberOfPeople, fare };
+        const userData = { name: user.name, email: user.email };
+        const driverData = { driverName, driverPhone, cabNumber };
+
+        console.log('Sending confirmation email to:', user.email);
+        console.log('User data:', userData);
+
+        await sendRideConfirmationEmail(rideData, userData, driverData);
+        console.log('Ride confirmation email sent successfully to:', user.email);
+      } catch (emailError) {
+        console.error('Failed to send confirmation email:', emailError);
+        // Don't fail the ride confirmation if email fails
+      }
+    }
 
     res.status(200).json({ message: 'Ride history updated', rideHistory: user.rideHistory });
   } catch (error) {
@@ -418,6 +460,51 @@ app.get('/ride-history', async (req, res) => {
 app.get('/logout', (req, res) => {
   res.cookie('token', '');
   res.status(200).json({ message: 'Logged out successfully' });
+});
+
+// Simple test route
+app.get('/test', (req, res) => {
+  res.json({ message: 'Backend is working!', timestamp: new Date().toISOString() });
+});
+
+// Test endpoint to verify user email retrieval
+app.get('/test-user-email', async (req, res) => {
+  try {
+    const token = req.headers.authorization?.split(' ')[1];
+
+    if (!token) {
+      return res.status(401).json({ message: 'No token provided' });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'secret');
+
+    if (decoded.isGuest) {
+      return res.status(200).json({
+        message: 'Guest user - no email available',
+        isGuest: true
+      });
+    }
+
+    const user = await userModel.findById(decoded.userid);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({
+      message: 'User email retrieved successfully',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        isGoogleUser: user.isGoogleUser
+      }
+    });
+
+  } catch (error) {
+    console.error('Error testing user email:', error);
+    res.status(500).json({ message: 'Error testing user email' });
+  }
 });
 
 // Start server
