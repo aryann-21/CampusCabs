@@ -4,28 +4,26 @@ const mongoose = require('mongoose');
 // Connect to MongoDB
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/campuscabs';
 
-// Function to ensure MongoDB connection
-const ensureConnection = async () => {
-  if (mongoose.connection.readyState === 1) {
-    return; // Already connected
-  }
+// Simple connection for Vercel serverless
+mongoose.connect(MONGODB_URI, {
+  serverSelectionTimeoutMS: 10000, // 10 seconds timeout
+  socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+})
+  .then(() => console.log("MongoDB connected successfully"))
+  .catch(err => console.error("MongoDB connection error: ", err));
 
-  try {
-    await mongoose.connect(MONGODB_URI, {
-      serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
-      socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-      bufferMaxEntries: 0, // Disable mongoose buffering
-      bufferCommands: false, // Disable mongoose buffering
-    });
-    console.log("MongoDB connected successfully");
-  } catch (err) {
-    console.error("MongoDB connection error: ", err);
-    throw err;
-  }
-};
+// Add connection event listeners
+mongoose.connection.on('connected', () => {
+  console.log('MongoDB connected event fired');
+});
 
-// Initialize connection
-ensureConnection().catch(console.error);
+mongoose.connection.on('error', (err) => {
+  console.error('MongoDB connection error event:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('MongoDB disconnected event fired');
+});
 
 const rideSchema = new mongoose.Schema({
   dropLocation: { type: String, required: true },

@@ -128,18 +128,6 @@ app.post('/api/auth/google', cors(), async (req, res) => {
 
     console.log('Processed user data:', userData);
 
-    // Ensure MongoDB connection is ready
-    const mongoose = require('mongoose');
-    if (mongoose.connection.readyState !== 1) {
-      console.log('MongoDB not connected, waiting for connection...');
-      await new Promise((resolve, reject) => {
-        mongoose.connection.once('connected', resolve);
-        mongoose.connection.once('error', reject);
-        // Timeout after 10 seconds
-        setTimeout(() => reject(new Error('MongoDB connection timeout')), 10000);
-      });
-    }
-
     // Check if user already exists
     let user = await userModel.findOne({ email: userData.email });
 
