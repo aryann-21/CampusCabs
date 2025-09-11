@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from 'axios';
+import { API_ENDPOINTS } from '../config/api';
 
 const UserContext = createContext();
 
@@ -15,7 +16,7 @@ export const UserProvider = ({ children }) => {
     const token = localStorage.getItem('token');
     if (token) {
       // Verify token with backend
-      axios.get(`https://campuscabs-backend-bn50ig14z-aryann-21s-projects.vercel.app/api/auth/verify`, {
+      axios.get(API_ENDPOINTS.VERIFY_TOKEN, {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(response => {

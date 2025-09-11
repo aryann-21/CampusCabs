@@ -4,6 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useUser } from "../context/UserContext";
 import axios from "axios"; // Import axios for making API calls
+import { API_ENDPOINTS } from "../config/api";
 
 const RideHistoryPage = () => {
   const location = useLocation();
@@ -18,7 +19,7 @@ const RideHistoryPage = () => {
           const token = localStorage.getItem('token');
           
           const response = await axios.get(
-            `https://campuscabs-backend-bn50ig14z-aryann-21s-projects.vercel.app/ride-history`,
+            API_ENDPOINTS.RIDE_HISTORY,
             {
               headers: {
                 Authorization: `Bearer ${token}`

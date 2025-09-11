@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { useUser } from "../context/UserContext"
 import axios from "axios"
 import { toast } from "react-toastify"
+import { API_ENDPOINTS } from "../config/api"
 
 const GoogleLoginButton = ({ compact = false }) => {
   const navigate = useNavigate()
@@ -18,7 +19,7 @@ const GoogleLoginButton = ({ compact = false }) => {
         )
 
         // Send the user info to your backend
-        const response = await axios.post(`https://campuscabs-backend-bn50ig14z-aryann-21s-projects.vercel.app/api/auth/google`, {
+        const response = await axios.post(API_ENDPOINTS.GOOGLE_AUTH, {
           userInfo: userInfoResponse.data,
           accessToken: tokenResponse.access_token,
         })

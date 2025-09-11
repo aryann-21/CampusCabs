@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { API_ENDPOINTS } from '../config/api';
 
 const GuestLoginButton = ({ compact = false }) => {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ const GuestLoginButton = ({ compact = false }) => {
   const handleGuestLogin = async () => {
     try {
       // Send request to guest login endpoint
-      const response = await axios.post(`https://campuscabs-backend-bn50ig14z-aryann-21s-projects.vercel.app/api/auth/guest`);
+      const response = await axios.post(API_ENDPOINTS.GUEST_AUTH);
 
       if (response.data.success) {
         // Clear any existing tokens first

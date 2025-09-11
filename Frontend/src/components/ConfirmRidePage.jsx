@@ -4,6 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import axios from "axios"; // Make sure Axios is imported for the POST request
 import "react-toastify/dist/ReactToastify.css";
 import { useUser } from "../context/UserContext";
+import { API_ENDPOINTS } from "../config/api";
 
 const ConfirmRidePage = () => {
   const location = useLocation();
@@ -65,7 +66,7 @@ const ConfirmRidePage = () => {
       console.log('Sending ride data to backend:', rideData);
       console.log('Current user:', user);
       
-      const rideHistoryResponse = await axios.post(`https://campuscabs-backend-bn50ig14z-aryann-21s-projects.vercel.app/save-ride-history`, rideData, {
+      const rideHistoryResponse = await axios.post(API_ENDPOINTS.SAVE_RIDE_HISTORY, rideData, {
         headers: {
           Authorization: `Bearer ${token}`
         }

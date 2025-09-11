@@ -15,6 +15,8 @@ const app = express();
 // CORS setup to allow requests from frontend
 app.use(cors({
   origin: function (origin, callback) {
+    console.log('CORS request from origin:', origin);
+
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
 
@@ -30,6 +32,7 @@ app.use(cors({
     ];
 
     if (allowedOrigins.indexOf(origin) !== -1) {
+      console.log('CORS allowed for origin:', origin);
       callback(null, true);
     } else {
       console.log('CORS blocked origin:', origin);
@@ -51,7 +54,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Initialize Google OAuth client
-const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+let googleClient;
+try {
+  googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+  console.log('Google OAuth client initialized successfully');
+} catch (error) {
+  console.error('Failed to initialize Google OAuth client:', error);
+}
 
 // Twilio setup
 // const accountSid = process.env.SID;  // Replace with your Twilio Account SID
@@ -59,7 +68,7 @@ const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 // const client = twilio(accountSid, authToken);
 
 // Google OAuth Routes
-app.post('/api/auth/google', async (req, res) => {
+app.post('/api/auth/google', cors(), async (req, res) => {
   try {
     console.log('Google auth request received:', {
       body: req.body,
@@ -67,6 +76,15 @@ app.post('/api/auth/google', async (req, res) => {
       origin: req.headers.origin,
       method: req.method
     });
+
+    // Check if Google client is initialized
+    if (!googleClient) {
+      console.error('Google OAuth client not initialized');
+      return res.status(500).json({
+        success: false,
+        message: 'Google OAuth not configured properly'
+      });
+    }
 
     const { userInfo, accessToken, credential } = req.body;
 
@@ -506,7 +524,15 @@ app.get('/logout', (req, res) => {
 
 // Simple test route
 app.get('/test', (req, res) => {
-  res.json({ message: 'Backend is working!', timestamp: new Date().toISOString() });
+  res.json({
+    message: 'Backend is working!',
+    timestamp: new Date().toISOString(),
+    env: {
+      googleClientId: process.env.GOOGLE_CLIENT_ID ? 'SET' : 'NOT SET',
+      jwtSecret: process.env.JWT_SECRET ? 'SET' : 'NOT SET',
+      mongodbUri: process.env.MONGODB_URI ? 'SET' : 'NOT SET'
+    }
+  });
 });
 
 // Health check endpoint for CORS testing

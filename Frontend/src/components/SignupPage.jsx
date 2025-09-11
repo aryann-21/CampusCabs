@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios"; // Import Axios for making HTTP requests
 import bgImg from "../assets/signup.png";
 import { useUser } from "../context/UserContext.jsx"; // Import the UserContext
+import { API_ENDPOINTS } from "../config/api";
 
 const SignupPage = () => {
   const [name, setName] = useState("");
@@ -20,7 +21,7 @@ const SignupPage = () => {
     try {
       // Send a POST request to the backend signup route
       const response = await axios.post(
-        `https://campuscabs-backend-bn50ig14z-aryann-21s-projects.vercel.app/signup`, // Your backend signup endpoint
+        API_ENDPOINTS.SIGNUP, // Your backend signup endpoint
         { name, email, password, phone }
       );
 
