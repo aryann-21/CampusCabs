@@ -128,6 +128,18 @@ app.post('/api/auth/google', cors(), async (req, res) => {
 
     console.log('Processed user data:', userData);
 
+    // Ensure MongoDB connection is ready
+    const mongoose = require('mongoose');
+    if (mongoose.connection.readyState !== 1) {
+      console.log('MongoDB not connected, waiting for connection...');
+      await new Promise((resolve, reject) => {
+        mongoose.connection.once('connected', resolve);
+        mongoose.connection.once('error', reject);
+        // Timeout after 10 seconds
+        setTimeout(() => reject(new Error('MongoDB connection timeout')), 10000);
+      });
+    }
+
     // Check if user already exists
     let user = await userModel.findOne({ email: userData.email });
 
@@ -178,6 +190,11 @@ app.post('/api/auth/google', cors(), async (req, res) => {
 
   } catch (error) {
     console.error('Google auth error:', error);
+    console.error('Error details:', {
+      name: error.name,
+      message: error.message,
+      stack: error.stack
+    });
 
     // Handle specific MongoDB timeout errors
     if (error.name === 'MongooseError' && error.message.includes('buffering timed out')) {
@@ -191,7 +208,8 @@ app.post('/api/auth/google', cors(), async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Authentication failed',
-      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error',
+      errorType: error.name
     });
   }
 });
