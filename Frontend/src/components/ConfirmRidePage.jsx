@@ -65,7 +65,7 @@ const ConfirmRidePage = () => {
       console.log('Sending ride data to backend:', rideData);
       console.log('Current user:', user);
       
-      const rideHistoryResponse = await axios.post(`https://campuscabs-backend.vercel.app/save-ride-history`, rideData, {
+      const rideHistoryResponse = await axios.post(`https://campuscabs-backend-bn50ig14z-aryann-21s-projects.vercel.app/save-ride-history`, rideData, {
         headers: {
           Authorization: `Bearer ${token}`
         }

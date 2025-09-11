@@ -15,7 +15,7 @@ export const UserProvider = ({ children }) => {
     const token = localStorage.getItem('token');
     if (token) {
       // Verify token with backend
-      axios.get(`https://campuscabs-backend.vercel.app/api/auth/verify`, {
+      axios.get(`https://campuscabs-backend-bn50ig14z-aryann-21s-projects.vercel.app/api/auth/verify`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       .then(response => {

@@ -11,7 +11,7 @@ const GuestLoginButton = ({ compact = false }) => {
   const handleGuestLogin = async () => {
     try {
       // Send request to guest login endpoint
-      const response = await axios.post(`https://campuscabs-backend.vercel.app/api/auth/guest`);
+      const response = await axios.post(`https://campuscabs-backend-bn50ig14z-aryann-21s-projects.vercel.app/api/auth/guest`);
 
       if (response.data.success) {
         // Clear any existing tokens first

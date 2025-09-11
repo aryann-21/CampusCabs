@@ -18,7 +18,7 @@ const RideHistoryPage = () => {
           const token = localStorage.getItem('token');
           
           const response = await axios.get(
-            `https://campuscabs-backend.vercel.app/ride-history`,
+            `https://campuscabs-backend-bn50ig14z-aryann-21s-projects.vercel.app/ride-history`,
             {
               headers: {
                 Authorization: `Bearer ${token}`
