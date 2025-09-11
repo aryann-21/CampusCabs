@@ -67,6 +67,12 @@ try {
 // const authToken = process.env.AUTH_TOKEN;   // Replace with your Twilio Auth Token
 // const client = twilio(accountSid, authToken);
 
+// Handle OPTIONS request for Google auth endpoint
+app.options('/api/auth/google', cors(), (req, res) => {
+  console.log('OPTIONS request for Google auth endpoint');
+  res.status(200).end();
+});
+
 // Google OAuth Routes
 app.post('/api/auth/google', cors(), async (req, res) => {
   try {
@@ -172,6 +178,16 @@ app.post('/api/auth/google', cors(), async (req, res) => {
 
   } catch (error) {
     console.error('Google auth error:', error);
+
+    // Handle specific MongoDB timeout errors
+    if (error.name === 'MongooseError' && error.message.includes('buffering timed out')) {
+      return res.status(503).json({
+        success: false,
+        message: 'Database temporarily unavailable. Please try again.',
+        error: 'Database timeout'
+      });
+    }
+
     res.status(500).json({
       success: false,
       message: 'Authentication failed',
